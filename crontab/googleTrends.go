@@ -5,15 +5,17 @@ import (
 	"log"
 	"strconv"
 	"strings"
-	"topics/database"
 
 	"github.com/groovili/gogtrends"
 	"github.com/pkg/errors"
+	"github.com/topics/models"
 )
 
 type DailyTrends struct {
 	BasicCron
 }
+
+var trendModel = new(models.TrendModel)
 
 const (
 	locUS  = "TW"
@@ -42,25 +44,7 @@ func (d *DailyTrends) Do() {
 			log.Fatal(errors.Wrap(err, "Item count replace K+ to 1000 fail"))
 			return
 		}
-		dto := database.TrendDTO{
-			BasicDTO: database.BasicDTO{},
-			Trend: database.Trend{
-				Rank:  count,
-				Title: *&element.Title.Query,
-			}}
-		record, err := dto.FetchByTitle()
-		if err != nil {
-			log.Println("New trend record, insert to database")
-			dto.Insert()
-		}
-
-		if record != nil && count > record.Rank {
-			dto.Trend.Model = record.Model
-			err := dto.Update()
-			if err != nil {
-				log.Printf("Can not update title(%s), err: %s", dto.Trend.Title, err)
-			}
-		}
+		trendModel.Store(count, *&element.Title.Query)
 	}
 	log.Println("Daily trends end")
 }

@@ -3,25 +3,23 @@ package crawler
 import (
 	"fmt"
 	"log"
+	"os"
 	"strconv"
 	"strings"
 	"time"
-	"topics/common"
-	"topics/config"
-	"topics/database"
 
 	"github.com/pkg/errors"
 	"github.com/tebeka/selenium"
+	"github.com/topics/common"
+	"github.com/topics/database"
 )
 
-func (c *CrawlerEntry) MarketIndex(startDate time.Time) (*[]*database.MarketIndex, error) {
-	cfg := config.Get()
-	nowDate := time.Now()
+func (c *CrawlerEntry) MarketIndex(startDate time.Time) ([]*database.MarketIndex, error) {
 	markets := []*database.MarketIndex{}
+	nowDate := time.Now()
 	searchBtn, _ := (*c.Crawler).FindElement(selenium.ByXPATH, "//form[@class='main']//a[@class='button search']")
 
 	for nowDate.After(startDate) {
-		//
 		yearSelect, err := (*c.Crawler).FindElement(selenium.ByXPATH, fmt.Sprintf("//form[@class='main']//div[@id='d1']//select[@name='yy']//option[contains(@value, '%d')]", startDate.Year()))
 		if err != nil {
 			startDate = startDate.AddDate(0, 1, 0)
@@ -43,8 +41,6 @@ func (c *CrawlerEntry) MarketIndex(startDate time.Time) (*[]*database.MarketInde
 		if err != nil {
 			return nil, err
 		}
-		time.Sleep(time.Duration(common.RandInt(2, cfg.Crawler.Delay)) * time.Second)
-		startDate = startDate.AddDate(0, 1, 0)
 
 		// Data table
 		table, err := (*c.Crawler).FindElement(selenium.ByID, "report-table")
@@ -91,12 +87,21 @@ func (c *CrawlerEntry) MarketIndex(startDate time.Time) (*[]*database.MarketInde
 				default:
 				}
 			}
-			markets = append(markets, &market)
+			if market.Date != (time.Time{}) {
+				markets = append(markets, &market)
+			}
 		}
-		// Remove first element which contains default values
-		markets = markets[1:]
+		if len(markets) >= 32 {
+			break
+		}
+		delay, err := strconv.Atoi(os.Getenv("CRAWLER_DELAY"))
+		if err != nil {
+			return nil, err
+		}
+		time.Sleep(time.Duration(common.RandInt(2, delay)) * time.Second)
+		startDate = startDate.AddDate(0, 1, 0)
 	}
-	return &markets, nil
+	return markets, nil
 }
 
 func getElenentText(element *selenium.WebElement) string {

@@ -1,15 +1,13 @@
 package sysexec
 
 import (
-	"fmt"
 	"log"
+	"os"
 	"os/exec"
-	"topics/config"
 )
 
 func FindWebDriverPID() []byte {
-	cfg := config.Get()
-	cmd := exec.Command("lsof", "-t", "-i:"+fmt.Sprintf("%d", cfg.Crawler.Port))
+	cmd := exec.Command("lsof", "-t", "-i:"+os.Getenv("CRAWLER_PORT"))
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		log.Printf("No WebDriver process running, ready to start: %s", err)

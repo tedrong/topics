@@ -2,60 +2,51 @@ package main
 
 import (
 	"log"
+	"os"
+
+	"github.com/joho/godotenv"
+	"github.com/topics/crontab"
+	"github.com/topics/database"
+	"github.com/topics/router"
 
 	"github.com/gin-gonic/gin"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/robfig/cron/v3"
 	"gopkg.in/natefinch/lumberjack.v2"
-
-	"topics/config"
-	"topics/crontab"
-	"topics/database"
-)
-
-const (
-	configFileName = "topics.yml"
 )
 
 func main() {
-	// Get the configurations from config file
-	cfg := config.Load(configFileName)
-
+	// Setting up log file rules
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	log.SetOutput(&lumberjack.Logger{
-		Filename:   cfg.Log.Path + cfg.Log.Name,
+		Filename:   "./tmp/topics.log",
 		MaxSize:    32, // megabytes
 		MaxBackups: 2,
 		MaxAge:     30,   //days
 		Compress:   true, // disabled by default
 	})
 
-	// Databases initialize and connect
-	stockDB := InitDB(database.DBStock)
-	trendDB := InitDB(database.DBTrend)
-	stockDB.Connect()
-	trendDB.Connect()
+	// Checking if environment is PRODUCTION, change gin to release mode
+	if os.Getenv("ENV") == "PRODUCTION" {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
+	// Load the environment parameters file
+	// Default file name is ".env", we can modify file name with Load() function. (e.g)godotenv.Load(./config/production.env)
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("error: failed to load the env file")
+	}
+
+	// Start PostgreSQL and Redis on database 1 - it's used to store the JWT but you can use it for anythig else
+	database.Init(1)
 
 	marketIndexCron := crontab.MarketIndex{BasicCron: crontab.BasicCron{}}
-	go marketIndexCron.Do()
+	trendsCron := crontab.DailyTrends{BasicCron: crontab.BasicCron{}}
 
-	// trendsCron := crontab.DailyTrends{BasicCron: crontab.BasicCron{}}
-	// trendsCron.Do()
+	routine := cron.New()
+	routine.AddFunc(marketIndexCron.Period(), marketIndexCron.Do)
+	routine.AddFunc(trendsCron.Period(), trendsCron.Do)
+	routine.Start()
 
-	// routine := cron.New()
-	// routine.AddFunc(trendsCron.Period(), trendsCron.Do)
-	// routine.Start()
-
-	basicDTO := database.BasicDTO{}
-	productAPI := InitProductAPI(basicDTO.Get(database.DBStock))
-	r := gin.Default()
-	r.GET("/products", productAPI.FindAll)
-	r.GET("/products/:id", productAPI.FindByID)
-	r.POST("/products", productAPI.Create)
-	r.PUT("/products/:id", productAPI.Update)
-	r.DELETE("/products/:id", productAPI.Delete)
-
-	err := r.Run()
-	if err != nil {
-		panic(err)
-	}
+	router.Init()
 }

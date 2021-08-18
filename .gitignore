@@ -19,9 +19,6 @@
 lib/*
 !lib/init.go
 
-# Dependency directories (remove the comment below to include it)
-# vendor/
-
-# Auto generate from wire
-wire_gen.go
+# Sensitive data
+cert/
 
