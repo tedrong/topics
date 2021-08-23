@@ -16,7 +16,7 @@ type TAIEX struct {
 	BasicCron
 }
 
-var marketModel = new(models.MarketModel)
+var TAIEXModel = new(models.TAIEXModel)
 
 func (m *TAIEX) Period() string {
 	// return "@hourly"
@@ -53,14 +53,14 @@ func (m *TAIEX) Do() {
 		log.Fatal(errors.Wrap(err, "URL connection fail"))
 	}
 	// Find the latest record in database, return 1970-01-01 if empty
-	date := marketModel.LatestDate()
+	date := TAIEXModel.LatestDate()
 	log.Printf("The latest date of market index is %s", date)
 	// Startup crawler with date(first day of current month)
 	TAIEX, err := crawlerEntry.TAIEX(time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.Local))
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "Get market indexes fail"))
 	}
-	marketModel.Store(TAIEX)
+	TAIEXModel.Store(TAIEX)
 	// Stop crawler and web driver
 	defer (*crawlerEntry.Crawler).Quit()
 	defer webDriver.Stop()

@@ -8,9 +8,9 @@ import (
 	"github.com/topics/database"
 )
 
-type MarketModel struct{}
+type TAIEXModel struct{}
 
-func (m MarketModel) LatestDate() time.Time {
+func (m TAIEXModel) LatestDate() time.Time {
 	db := database.GetPG(database.DBStock)
 	row := database.TAIEX{}
 	result := db.Last(&row)
@@ -24,7 +24,7 @@ func (m MarketModel) LatestDate() time.Time {
 	return row.Date
 }
 
-func (m MarketModel) Store(markets []*database.TAIEX) {
+func (m TAIEXModel) Store(markets []*database.TAIEX) {
 	db := database.GetPG(database.DBStock)
 	for _, element := range markets {
 		if db.Model(&element).Where("date = ?", element.Date).Updates(&element).RowsAffected == 0 {
