@@ -14,8 +14,8 @@ import (
 	"github.com/topics/database"
 )
 
-func (c *CrawlerEntry) MarketIndex(startDate time.Time) ([]*database.MarketIndex, error) {
-	markets := []*database.MarketIndex{}
+func (c *CrawlerEntry) TAIEX(startDate time.Time) ([]*database.TAIEX, error) {
+	markets := []*database.TAIEX{}
 	nowDate := time.Now()
 	searchBtn, _ := (*c.Crawler).FindElement(selenium.ByXPATH, "//form[@class='main']//a[@class='button search']")
 
@@ -49,7 +49,7 @@ func (c *CrawlerEntry) MarketIndex(startDate time.Time) ([]*database.MarketIndex
 		}
 		rows, _ := table.FindElements(selenium.ByTagName, "tr")
 		for _, row := range rows {
-			market := database.MarketIndex{}
+			market := database.TAIEX{}
 			columns, _ := row.FindElements(selenium.ByTagName, "td")
 			for idx, cell := range columns {
 				switch idx {
@@ -74,16 +74,16 @@ func (c *CrawlerEntry) MarketIndex(startDate time.Time) ([]*database.MarketIndex
 					market.Date = date
 				case 1:
 					price, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
-					market.OpeningPrice = price
+					market.OpeningIndex = price
 				case 2:
 					price, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
-					market.MaxPrice = price
+					market.HighestIndex = price
 				case 3:
 					price, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
-					market.MinPrice = price
+					market.LowestIndex = price
 				case 4:
 					price, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
-					market.ClosingPrice = price
+					market.ClosingIndex = price
 				default:
 				}
 			}

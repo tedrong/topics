@@ -12,18 +12,18 @@ import (
 	"github.com/topics/sysexec"
 )
 
-type MarketIndex struct {
+type TAIEX struct {
 	BasicCron
 }
 
 var marketModel = new(models.MarketModel)
 
-func (m *MarketIndex) Period() string {
+func (m *TAIEX) Period() string {
 	// return "@hourly"
 	return "0 * * * *"
 }
 
-func (m *MarketIndex) Do() {
+func (m *TAIEX) Do() {
 	// Check if there is a instance running, kill it
 	if pid := sysexec.FindWebDriverPID(); pid != nil {
 		sysexec.KillWebDriver(pid)
@@ -56,11 +56,11 @@ func (m *MarketIndex) Do() {
 	date := marketModel.LatestDate()
 	log.Printf("The latest date of market index is %s", date)
 	// Startup crawler with date(first day of current month)
-	markets, err := crawlerEntry.MarketIndex(time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.Local))
+	TAIEX, err := crawlerEntry.TAIEX(time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.Local))
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "Get market indexes fail"))
 	}
-	marketModel.Store(markets)
+	marketModel.Store(TAIEX)
 	// Stop crawler and web driver
 	defer (*crawlerEntry.Crawler).Quit()
 	defer webDriver.Stop()

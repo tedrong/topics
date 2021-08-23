@@ -5,12 +5,12 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/robfig/cron/v3"
 	"github.com/topics/crontab"
 	"github.com/topics/database"
 	"github.com/topics/router"
 
 	"github.com/gin-gonic/gin"
-	"github.com/robfig/cron/v3"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
@@ -40,11 +40,11 @@ func main() {
 	// Start PostgreSQL and Redis on database 1 - it's used to store the JWT but you can use it for anythig else
 	database.Init(1)
 
-	marketIndexCron := crontab.MarketIndex{BasicCron: crontab.BasicCron{}}
+	TAIEXCron := crontab.TAIEX{BasicCron: crontab.BasicCron{}}
 	trendsCron := crontab.DailyTrends{BasicCron: crontab.BasicCron{}}
 
 	routine := cron.New()
-	routine.AddFunc(marketIndexCron.Period(), marketIndexCron.Do)
+	routine.AddFunc(TAIEXCron.Period(), TAIEXCron.Do)
 	routine.AddFunc(trendsCron.Period(), trendsCron.Do)
 	routine.Start()
 
