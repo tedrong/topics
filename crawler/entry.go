@@ -48,3 +48,11 @@ func (c *CrawlerEntry) Init() (*selenium.WebDriver, error) {
 	}
 	return &wd, nil
 }
+
+func getElenentText(element *selenium.WebElement) string {
+	value, err := (*element).Text()
+	if err != nil {
+		return ""
+	}
+	return value
+}

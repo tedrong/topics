@@ -88,7 +88,7 @@ func ConnectDB(dsn string) (*gorm.DB, error) {
 func migration(flag DBFlag) {
 	switch flag {
 	case DBStock:
-		DBSet[flag].Debug().AutoMigrate(&TAIEX{})
+		DBSet[flag].Debug().AutoMigrate(&StockInfo{}, &TAIEX{}, &DailyTrading{})
 		log.Print("Table migrate successfully in DB:stock")
 	case DBTrend:
 		DBSet[flag].Debug().AutoMigrate(&Trend{})

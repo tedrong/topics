@@ -6,7 +6,16 @@ import (
 	"gorm.io/gorm"
 )
 
-// Market table have every day's stock price index in Taiwan
+type StockInfo struct {
+	gorm.Model
+	Symbol      string    `gorm:"type:text"`
+	Name        string    `gorm:"type:text"`
+	MarketType  string    `gorm:"type:text"`
+	Industry    string    `gorm:"type:text"`
+	ListingDate time.Time `gorm:"type:timestamp with time zone;default:'1970-01-01 0:00AM'"`
+}
+
+// Market table have every day's TAIEX in Taiwan
 type TAIEX struct {
 	gorm.Model
 	Date         time.Time `gorm:"type:timestamp with time zone;default:'1970-01-01 0:00AM'"`
@@ -14,6 +23,16 @@ type TAIEX struct {
 	ClosingIndex float64   `gorm:"type:decimal(10,2);default:0"`
 	LowestIndex  float64   `gorm:"type:decimal(10,2);default:0"`
 	HighestIndex float64   `gorm:"type:decimal(10,2);default:0"`
+}
+
+type DailyTrading struct {
+	gorm.Model
+	Date        time.Time `gorm:"type:timestamp with time zone;default:'1970-01-01 0:00AM'"`
+	TradeVolume float64   `gorm:"default:0"`
+	TradeValue  float64   `gorm:"default:0"`
+	Transaction float64   `gorm:"default:0"`
+	TAIEX       float64   `gorm:"default:0"`
+	Change      float64   `gorm:"default:0"`
 }
 
 // Trends table have every day's google search trends in Taiwan

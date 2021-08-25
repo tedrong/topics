@@ -6,6 +6,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/robfig/cron/v3"
+	"github.com/topics/crawler"
 	"github.com/topics/crontab"
 	"github.com/topics/database"
 	"github.com/topics/router"
@@ -40,12 +41,16 @@ func main() {
 	// Start PostgreSQL and Redis on database 1 - it's used to store the JWT but you can use it for anythig else
 	database.Init(1)
 
+	go crawler.StockInfo()
+
 	TAIEXCron := crontab.TAIEX{BasicCron: crontab.BasicCron{}}
+	DailyTrading := crontab.DailyTrading{BasicCron: crontab.BasicCron{}}
 	trendsCron := crontab.DailyTrends{BasicCron: crontab.BasicCron{}}
 
 	routine := cron.New()
 	routine.AddFunc(TAIEXCron.Period(), TAIEXCron.Do)
 	routine.AddFunc(trendsCron.Period(), trendsCron.Do)
+	routine.AddFunc(DailyTrading.Period(), DailyTrading.Do)
 	routine.Start()
 
 	router.Init()

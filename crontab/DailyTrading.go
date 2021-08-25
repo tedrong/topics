@@ -12,31 +12,31 @@ import (
 	"github.com/topics/sysexec"
 )
 
-type TAIEX struct {
+type DailyTrading struct {
 	BasicCron
 }
 
-var TAIEXModel = new(models.TAIEXModel)
+var DailyTradingModel = new(models.DailyTradingModel)
 
-func (m *TAIEX) Period() string {
+func (m *DailyTrading) Period() string {
 	// return "@hourly"
 	return "0 * * * *"
 }
 
-func (m *TAIEX) Do() {
+func (m *DailyTrading) Do() {
 	// Check if there is a instance running, kill it
-	if pid := sysexec.FindWebDriverPID(os.Getenv("CRAWLER_TAIEX_PORT")); pid != nil {
+	if pid := sysexec.FindWebDriverPID(os.Getenv("CRAWLER_DailyTrading_PORT")); pid != nil {
 		sysexec.KillWebDriver(pid)
 	}
 
 	// Initialize
 	crawlerEntry := crawler.CrawlerEntry{
-		URL:             "https://www.twse.com.tw/zh/page/trading/indices/MI_5MINS_HIST.html",
+		URL:             "https://www.twse.com.tw/zh/page/trading/exchange/FMTQIK.html",
 		SeleniumPath:    os.Getenv("SELENIUM"),
 		GeckoDriverPath: os.Getenv("GECKO_DRIVER"),
 	}
 
-	port, err := strconv.Atoi(os.Getenv("CRAWLER_TAIEX_PORT"))
+	port, err := strconv.Atoi(os.Getenv("CRAWLER_DailyTrading_PORT"))
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "WebDriver can't get correct port number"))
 	}
@@ -53,14 +53,14 @@ func (m *TAIEX) Do() {
 		log.Fatal(errors.Wrap(err, "URL connection fail"))
 	}
 	// Find the latest record in database, return 1970-01-01 if empty
-	date := TAIEXModel.LatestDate()
-	log.Printf("The latest date of TAIEX is %s", date)
+	date := DailyTradingModel.LatestDate()
+	log.Printf("The latest date of DailyTrading is %s", date)
 	// Startup crawler with date(first day of current month)
-	TAIEX, err := crawlerEntry.TAIEX(time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.Local))
+	DailyTrading, err := crawlerEntry.DailyTrading(time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.Local))
 	if err != nil {
-		log.Fatal(errors.Wrap(err, "Get TAIEX fail"))
+		log.Fatal(errors.Wrap(err, "Get market indexes fail"))
 	}
-	TAIEXModel.Store(TAIEX)
+	DailyTradingModel.Store(DailyTrading)
 	// Stop crawler and web driver
 	defer (*crawlerEntry.Crawler).Quit()
 	defer webDriver.Stop()
