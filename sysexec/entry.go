@@ -17,8 +17,8 @@ func FindWebDriverPID(port string) []byte {
 
 func KillWebDriver(pid []byte) {
 	cmd := exec.Command("kill", string(pid))
-	_, err := cmd.CombinedOutput()
+	output, err := cmd.CombinedOutput()
 	if err != nil {
-		log.Fatalf("cmd.Run() failed with %s\n", err)
+		log.Fatalf("cmd.Run() failed with %s\n", string(output))
 	}
 }
