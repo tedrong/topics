@@ -3,50 +3,81 @@ package crawler
 import (
 	"fmt"
 	"log"
+	"os"
+	"strconv"
+	"sync"
 
 	"github.com/pkg/errors"
 	"github.com/tebeka/selenium"
+	"github.com/tebeka/selenium/firefox"
+	"github.com/topics/sysexec"
 )
 
-type CrawlerEntry struct {
+type Crawler struct {
+	Mutex           sync.Mutex
 	URL             string
 	SeleniumPath    string
 	GeckoDriverPath string
 	Port            int
-	Crawler         *selenium.WebDriver
+	WebDriver       *selenium.WebDriver
 }
 
-func (c *CrawlerEntry) StartWebInstance() (*selenium.Service, error) {
+var c *Crawler
+
+func StartWebInstance() (*selenium.Service, *Crawler) {
+	// Check if there is a instance running, kill it
+	if pid := sysexec.FindWebDriverPID(os.Getenv("WEB_INSTANCE_PORT")); pid != nil {
+		sysexec.KillWebDriver(pid)
+	}
+
+	port, err := strconv.Atoi(os.Getenv("WEB_INSTANCE_PORT"))
+	if err != nil {
+		log.Fatal(errors.Wrap(err, "WebDriver can't get correct port number"))
+	}
+	crawler := Crawler{
+		URL:             "https://www.google.com",
+		SeleniumPath:    os.Getenv("SELENIUM"),
+		GeckoDriverPath: os.Getenv("GECKO_DRIVER"),
+		Port:            port,
+	}
 	// Start a Selenium WebDriver server instance (if one is not already running).
 	opts := []selenium.ServiceOption{
-		// selenium.StartFrameBuffer(),             // Start an X frame buffer for the browser to run in.
-		selenium.GeckoDriver(c.GeckoDriverPath), // Specify the path to GeckoDriver in order to use Firefox.
+		selenium.StartFrameBuffer(),                   // Start an X frame buffer for the browser to run in.
+		selenium.GeckoDriver(crawler.GeckoDriverPath), // Specify the path to GeckoDriver in order to use Firefox.
 		// selenium.Output(os.Stderr),              // Output debug information to STDERR.
 	}
 
 	// selenium.SetDebug(true)
-	service, err := selenium.NewSeleniumService(c.SeleniumPath, c.Port, opts...)
+	service, err := selenium.NewSeleniumService(crawler.SeleniumPath, crawler.Port, opts...)
 	if err != nil {
-		log.Fatal(errors.Wrap(err, "WebDriver instance start"))
-		return nil, err
+		log.Fatal(errors.Wrap(err, "Selenium WebInstance start"))
+		return nil, nil
 	}
-	return service, nil
-}
-
-func (c *CrawlerEntry) Init() (*selenium.WebDriver, error) {
 	// Connect to the WebDriver instance running locally.
 	caps := selenium.Capabilities{"browserName": "firefox"}
-	wd, err := selenium.NewRemote(caps, fmt.Sprintf("http://localhost:%d/wd/hub", c.Port))
+	firefoxCaps := firefox.Capabilities{
+		Args: []string{
+			"--headless",
+		},
+	}
+	caps.AddFirefox(firefoxCaps)
+	wd, err := selenium.NewRemote(caps, fmt.Sprintf("http://localhost:%d/wd/hub", crawler.Port))
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "Connect to WebDriver"))
-		return nil, err
 	}
+	crawler.WebDriver = &wd
+	c = &crawler
+	return service, c
+}
 
-	if err := wd.Get(c.URL); err != nil {
+func Get() *Crawler {
+	return c
+}
+
+func (c *Crawler) GOTO() {
+	if err := (*c.WebDriver).Get(c.URL); err != nil {
 		log.Fatal(errors.Wrap(err, fmt.Sprintf("Connect to %s", c.URL)))
-		return nil, err
 	}
-	return &wd, nil
 }
 
 func getElenentText(element *selenium.WebElement) string {

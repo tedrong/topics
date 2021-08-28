@@ -39,12 +39,12 @@ func (d *DailyTrends) Do() {
 		return
 	}
 	for _, element := range dailySearches {
-		count, err := strconv.Atoi(strings.Replace(*&element.FormattedTraffic, "K+", "000", 1))
+		count, err := strconv.Atoi(strings.Replace(element.FormattedTraffic, "K+", "000", 1))
 		if err != nil {
 			log.Fatal(errors.Wrap(err, "Item count replace K+ to 1000 fail"))
 			return
 		}
-		trendModel.Store(count, *&element.Title.Query)
+		trendModel.Store(count, element.Title.Query)
 	}
 	log.Println("Daily trends end")
 }

@@ -14,18 +14,23 @@ import (
 	"github.com/topics/database"
 )
 
-func (c *CrawlerEntry) DailyTrading(startDate time.Time) ([]*database.DailyTrading, error) {
+func (c *Crawler) DailyTrading(startDate time.Time) ([]*database.DailyTrading, error) {
 	markets := []*database.DailyTrading{}
 	nowDate := time.Now()
-	searchBtn, _ := (*c.Crawler).FindElement(selenium.ByXPATH, "//form[@class='main']//a[@class='button search']")
+	searchBtn, _ := (*c.WebDriver).FindElement(selenium.ByXPATH, "//form[@class='main']//a[@class='button search']")
 
 	for nowDate.After(startDate) {
-		yearSelect, err := (*c.Crawler).FindElement(selenium.ByXPATH, fmt.Sprintf("//form[@class='main']//div[@id='d1']//select[@name='yy']//option[contains(@value, '%d')]", startDate.Year()))
+		// Input target year
+		yearSelect, err := (*c.WebDriver).FindElement(selenium.ByXPATH, fmt.Sprintf("//form[@class='main']//div[@id='d1']//select[@name='yy']//option[contains(@value, '%d')]", startDate.Year()))
 		if err != nil {
 			startDate = startDate.AddDate(0, 1, 0)
 			continue
 		}
-		monthSelect, _ := (*c.Crawler).FindElement(selenium.ByXPATH, fmt.Sprintf("//form[@class='main']//div[@id='d1']//select[@name='mm']//option[contains(@value, '%d')]", int(startDate.Month())))
+		// Input target month
+		monthSelect, err := (*c.WebDriver).FindElement(selenium.ByXPATH, fmt.Sprintf("//form[@class='main']//div[@id='d1']//select[@name='mm']//option[contains(@value, '%d')]", int(startDate.Month())))
+		if err != nil {
+			return nil, err
+		}
 
 		err = yearSelect.Click()
 		if err != nil {
@@ -43,7 +48,7 @@ func (c *CrawlerEntry) DailyTrading(startDate time.Time) ([]*database.DailyTradi
 		}
 
 		// Data table
-		table, err := (*c.Crawler).FindElement(selenium.ByID, "report-table")
+		table, err := (*c.WebDriver).FindElement(selenium.ByID, "report-table")
 		if err != nil {
 			log.Fatal(errors.Wrap(err, "FindElement: report-table"))
 		}
@@ -90,19 +95,22 @@ func (c *CrawlerEntry) DailyTrading(startDate time.Time) ([]*database.DailyTradi
 				default:
 				}
 			}
+			// Take data if date if not the default value
 			if market.Date != (time.Time{}) {
 				markets = append(markets, &market)
 			}
 		}
-		if len(markets) >= 32 {
+		startDate = startDate.AddDate(0, 1, 0)
+		// Break out loop if data structure length is larger then threshold
+		if len(markets) >= 256 {
 			break
 		}
+		// Sleep for a while, with random seed
 		delay, err := strconv.Atoi(os.Getenv("CRAWLER_DELAY"))
 		if err != nil {
 			return nil, err
 		}
 		time.Sleep(time.Duration(common.RandInt(2, delay)) * time.Second)
-		startDate = startDate.AddDate(0, 1, 0)
 	}
 	return markets, nil
 }
