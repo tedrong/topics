@@ -14,7 +14,7 @@ import (
 	"github.com/topics/database"
 )
 
-func (c *Crawler) DailyTrading(startDate time.Time) ([]*database.HighlightsDailyTrading, error) {
+func (c *Crawler) HighlightsDailyTrading(startDate time.Time) ([]*database.HighlightsDailyTrading, error) {
 	markets := []*database.HighlightsDailyTrading{}
 	nowDate := time.Now()
 	searchBtn, _ := (*c.WebDriver).FindElement(selenium.ByXPATH, "//form[@class='main']//a[@class='button search']")

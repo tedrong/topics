@@ -25,6 +25,9 @@ type TAIEX struct {
 	HighestIndex float64   `gorm:"type:decimal(10,2);default:0"`
 }
 
+type DailyTrading struct {
+	gorm.Model
+}
 type HighlightsDailyTrading struct {
 	gorm.Model
 	Date        time.Time `gorm:"type:timestamp with time zone;default:'1970-01-01 0:00AM'"`
