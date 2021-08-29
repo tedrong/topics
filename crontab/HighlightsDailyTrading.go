@@ -30,10 +30,10 @@ func (m *DailyTrading) Do() {
 	date := DailyTradingModel.LatestDate()
 	log.Printf("The latest date of DailyTrading is %s", date)
 	// Startup crawler with date(first day of current month)
-	DailyTrading, err := crawler.DailyTrading(time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.Local))
+	HighlightsDailyTrading, err := crawler.DailyTrading(time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.Local))
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "Get market indexes fail"))
 	}
-	DailyTradingModel.Store(DailyTrading)
+	DailyTradingModel.Store(HighlightsDailyTrading)
 	crawler.Mutex.Unlock()
 }

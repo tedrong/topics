@@ -25,7 +25,7 @@ type TAIEX struct {
 	HighestIndex float64   `gorm:"type:decimal(10,2);default:0"`
 }
 
-type DailyTrading struct {
+type HighlightsDailyTrading struct {
 	gorm.Model
 	Date        time.Time `gorm:"type:timestamp with time zone;default:'1970-01-01 0:00AM'"`
 	TradeVolume float64   `gorm:"default:0"`
@@ -33,6 +33,11 @@ type DailyTrading struct {
 	Transaction float64   `gorm:"default:0"`
 	TAIEX       float64   `gorm:"default:0"`
 	Change      float64   `gorm:"default:0"`
+}
+
+type IndividualStockTrading struct {
+	gorm.Model
+	Date time.Time `gorm:"type:timestamp with time zone;default:'1970-01-01 0:00AM'"`
 }
 
 // Trends table have every day's google search trends in Taiwan

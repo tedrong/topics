@@ -12,7 +12,7 @@ type DailyTradingModel struct{}
 
 func (m DailyTradingModel) LatestDate() time.Time {
 	db := database.GetPG(database.DBStock)
-	row := database.DailyTrading{}
+	row := database.HighlightsDailyTrading{}
 	result := db.Last(&row)
 	if result.Error != nil {
 		date, err := time.Parse("2006-01-02", "1970-01-01")
@@ -24,7 +24,7 @@ func (m DailyTradingModel) LatestDate() time.Time {
 	return row.Date
 }
 
-func (m DailyTradingModel) Store(markets []*database.DailyTrading) {
+func (m DailyTradingModel) Store(markets []*database.HighlightsDailyTrading) {
 	db := database.GetPG(database.DBStock)
 	for _, element := range markets {
 		if db.Model(&element).Where("date = ?", element.Date).Updates(&element).RowsAffected == 0 {
