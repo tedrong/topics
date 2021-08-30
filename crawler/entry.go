@@ -42,7 +42,7 @@ func StartWebInstance() (*selenium.Service, *Crawler) {
 	}
 	// Start a Selenium WebDriver server instance (if one is not already running).
 	opts := []selenium.ServiceOption{
-		selenium.StartFrameBuffer(),                   // Start an X frame buffer for the browser to run in.
+		// selenium.StartFrameBuffer(),                   // Start an X frame buffer for the browser to run in.
 		selenium.GeckoDriver(crawler.GeckoDriverPath), // Specify the path to GeckoDriver in order to use Firefox.
 		// selenium.Output(os.Stderr),              // Output debug information to STDERR.
 	}
@@ -56,9 +56,9 @@ func StartWebInstance() (*selenium.Service, *Crawler) {
 	// Connect to the WebDriver instance running locally.
 	caps := selenium.Capabilities{"browserName": "firefox"}
 	firefoxCaps := firefox.Capabilities{
-		Args: []string{
-			"--headless",
-		},
+		// Args: []string{
+		// 	"--headless",
+		// },
 	}
 	caps.AddFirefox(firefoxCaps)
 	wd, err := selenium.NewRemote(caps, fmt.Sprintf("http://localhost:%d/wd/hub", crawler.Port))

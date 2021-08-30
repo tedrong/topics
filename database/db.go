@@ -89,7 +89,7 @@ func migration(flag DBFlag) {
 	switch flag {
 	case DBStock:
 		// DBSet[flag].Debug().AutoMigrate(&StockInfo{}, &TAIEX{}, &DailyTrading{})
-		DBSet[flag].AutoMigrate(&StockInfo{}, &TAIEX{}, &HighlightsDailyTrading{})
+		DBSet[flag].AutoMigrate(&StockInfo{}, &TAIEX{}, &DailyTrading{}, &Highlight{})
 		log.Print("Table migrate successfully in DB:stock")
 	case DBTrend:
 		DBSet[flag].AutoMigrate(&Trend{})

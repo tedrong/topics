@@ -14,8 +14,8 @@ import (
 	"github.com/topics/database"
 )
 
-func (c *Crawler) HighlightsDailyTrading(startDate time.Time) ([]*database.HighlightsDailyTrading, error) {
-	markets := []*database.HighlightsDailyTrading{}
+func (c *Crawler) Highlight(startDate time.Time) ([]*database.Highlight, error) {
+	markets := []*database.Highlight{}
 	nowDate := time.Now()
 	searchBtn, _ := (*c.WebDriver).FindElement(selenium.ByXPATH, "//form[@class='main']//a[@class='button search']")
 
@@ -54,7 +54,7 @@ func (c *Crawler) HighlightsDailyTrading(startDate time.Time) ([]*database.Highl
 		}
 		rows, _ := table.FindElements(selenium.ByTagName, "tr")
 		for _, row := range rows {
-			market := database.HighlightsDailyTrading{}
+			market := database.Highlight{}
 			columns, _ := row.FindElements(selenium.ByTagName, "td")
 			for idx, cell := range columns {
 				switch idx {
@@ -78,20 +78,20 @@ func (c *Crawler) HighlightsDailyTrading(startDate time.Time) ([]*database.Highl
 					}
 					market.Date = date
 				case 1:
-					price, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
-					market.TradeVolume = price
+					value, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
+					market.TradeVolume = value
 				case 2:
-					price, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
-					market.TradeValue = price
+					value, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
+					market.TradeValue = value
 				case 3:
-					price, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
-					market.Transaction = price
+					value, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
+					market.Transaction = value
 				case 4:
-					price, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
-					market.TAIEX = price
+					value, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
+					market.TAIEX = value
 				case 5:
-					price, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
-					market.Change = price
+					value, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
+					market.Change = value
 				default:
 				}
 			}

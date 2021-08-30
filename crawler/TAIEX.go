@@ -77,17 +77,17 @@ func (c *Crawler) TAIEX(startDate time.Time) ([]*database.TAIEX, error) {
 					}
 					market.Date = date
 				case 1:
-					price, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
-					market.OpeningIndex = price
+					value, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
+					market.OpeningIndex = value
 				case 2:
-					price, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
-					market.HighestIndex = price
+					value, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
+					market.HighestIndex = value
 				case 3:
-					price, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
-					market.LowestIndex = price
+					value, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
+					market.LowestIndex = value
 				case 4:
-					price, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
-					market.ClosingIndex = price
+					value, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
+					market.ClosingIndex = value
 				default:
 				}
 			}

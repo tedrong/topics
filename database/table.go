@@ -27,8 +27,23 @@ type TAIEX struct {
 
 type DailyTrading struct {
 	gorm.Model
+	Symbol            string    `gorm:"type:text"`
+	Date              time.Time `gorm:"type:timestamp with time zone;default:'1970-01-01 0:00AM'"`
+	TradeVolume       int64     `gorm:"default:0"`
+	TradeValue        int64     `gorm:"default:0"`
+	OpeningPrice      float64   `gorm:"default:0"`
+	HighestPrice      float64   `gorm:"default:0"`
+	LowestPrice       float64   `gorm:"default:0"`
+	ClosingPrice      float64   `gorm:"default:0"`
+	Change            float64   `gorm:"default:0"`
+	Transaction       int64     `gorm:"default:0"`
+	DividendYield     float64   `gorm:"default:0"`
+	DividendYear      string    `gorm:"type:text"`
+	PERadio           float64   `gorm:"default:0"`
+	PBRadio           float64   `gorm:"default:0"`
+	FiscalYearQuarter string    `gorm:"type:text"`
 }
-type HighlightsDailyTrading struct {
+type Highlight struct {
 	gorm.Model
 	Date        time.Time `gorm:"type:timestamp with time zone;default:'1970-01-01 0:00AM'"`
 	TradeVolume float64   `gorm:"default:0"`

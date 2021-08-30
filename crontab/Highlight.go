@@ -9,31 +9,31 @@ import (
 	"github.com/topics/models"
 )
 
-type HighlightsDailyTrading struct {
+type Highlight struct {
 	BasicCron
 }
 
-var DailyTradingModel = new(models.DailyTradingModel)
+var HighlightModel = new(models.Highlight)
 
-func (m *HighlightsDailyTrading) Period() string {
+func (m *Highlight) Period() string {
 	// return "@hourly"
 	return "* * * * *"
 }
 
-func (m *HighlightsDailyTrading) Do() {
+func (m *Highlight) Do() {
 	crawler := crawler.Get()
 	crawler.Mutex.Lock()
 	crawler.URL = "https://www.twse.com.tw/zh/page/trading/exchange/FMTQIK.html"
 	crawler.GOTO()
 	time.Sleep(2 * time.Second)
 	// Find the latest record in database, return 1970-01-01 if empty
-	date := DailyTradingModel.LatestDate()
-	log.Printf("The latest date of HighlightsDailyTrading is %s", date)
+	date := HighlightModel.LatestDate()
+	log.Printf("The latest date of Highlight is %s", date)
 	// Startup crawler with date(first day of current month)
-	HighlightsDailyTrading, err := crawler.HighlightsDailyTrading(time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.Local))
+	Highlight, err := crawler.Highlight(time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.Local))
 	if err != nil {
-		log.Fatal(errors.Wrap(err, "Get market indexes fail"))
+		log.Fatal(errors.Wrap(err, "Get highlight fail"))
 	}
-	DailyTradingModel.Store(HighlightsDailyTrading)
+	HighlightModel.Store(Highlight)
 	crawler.Mutex.Unlock()
 }

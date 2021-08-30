@@ -8,11 +8,11 @@ import (
 	"github.com/topics/database"
 )
 
-type DailyTradingModel struct{}
+type Highlight struct{}
 
-func (m DailyTradingModel) LatestDate() time.Time {
+func (m Highlight) LatestDate() time.Time {
 	db := database.GetPG(database.DBStock)
-	row := database.HighlightsDailyTrading{}
+	row := database.Highlight{}
 	result := db.Last(&row)
 	if result.Error != nil {
 		date, err := time.Parse("2006-01-02", "1970-01-01")
@@ -24,7 +24,7 @@ func (m DailyTradingModel) LatestDate() time.Time {
 	return row.Date
 }
 
-func (m DailyTradingModel) Store(markets []*database.HighlightsDailyTrading) {
+func (m Highlight) Store(markets []*database.Highlight) {
 	db := database.GetPG(database.DBStock)
 	for _, element := range markets {
 		if db.Model(&element).Where("date = ?", element.Date).Updates(&element).RowsAffected == 0 {
