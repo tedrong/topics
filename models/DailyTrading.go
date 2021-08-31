@@ -33,7 +33,7 @@ func (m DailyTrading) LatestRatioDate() time.Time {
 	trades := []database.DailyTrading{}
 	result := db.Where("pe_radio = ?", 0).Find(&trades)
 	if result.RowsAffected == 0 || result.Error != nil {
-		date, err := time.Parse("2006-01-02", "1970-01-01")
+		date, err := time.Parse("2006-01-02", "2005-09-02")
 		if err != nil {
 			log.Fatal(errors.Wrap(err, "Time parsing fail"))
 		}
