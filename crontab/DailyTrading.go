@@ -35,5 +35,20 @@ func (m *DailyTrading) Do() {
 		log.Fatal(errors.Wrap(err, "Get daily trading fail"))
 	}
 	DailyTradingModel.Store(DailyTrading)
+
+	// Get stocks supplement information from the other page (Stock P/E ratio, dividend yield and P/B ratio)
+	crawler.URL = "https://www.twse.com.tw/zh/page/trading/exchange/BWIBBU_d.html"
+	crawler.GOTO()
+	// Find the latest record in database, return 1970-01-01 if empty
+	date := DailyTradingModel.LatestRatioDate()
+	log.Printf("The latest date of daily trading supplement is %s", date)
+
+	time.Sleep(2 * time.Second)
+	DailyTrading, err = crawler.DailyTradingRatio(time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, time.Local))
+	if err != nil {
+		log.Fatal(errors.Wrap(err, "Get daily trading supplement fail"))
+	}
+	DailyTradingModel.Store(DailyTrading)
+
 	crawler.Mutex.Unlock()
 }

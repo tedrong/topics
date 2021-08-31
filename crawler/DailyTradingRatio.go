@@ -14,16 +14,17 @@ import (
 	"github.com/topics/database"
 )
 
-func (c *Crawler) TAIEX(startDate time.Time) ([]*database.TAIEX, error) {
-	markets := []*database.TAIEX{}
+func (c *Crawler) DailyTradingRatio(startDate time.Time) ([]*database.DailyTrading, error) {
+	trades := []*database.DailyTrading{}
 	nowDate := time.Now()
 	searchBtn, _ := (*c.WebDriver).FindElement(selenium.ByXPATH, "//form[@class='main']//a[@class='button search']")
+	category, _ := (*c.WebDriver).FindElement(selenium.ByXPATH, "//form[@class='main']//select[@name='selectType']//option[contains(@value, 'ALL')]")
 
 	for nowDate.After(startDate) {
 		// Input target year
 		yearSelect, err := (*c.WebDriver).FindElement(selenium.ByXPATH, fmt.Sprintf("//form[@class='main']//div[@id='d1']//select[@name='yy']//option[contains(@value, '%d')]", startDate.Year()))
 		if err != nil {
-			startDate = startDate.AddDate(0, 1, 0)
+			startDate = startDate.AddDate(0, 0, 1)
 			continue
 		}
 		// Input target month
@@ -42,66 +43,84 @@ func (c *Crawler) TAIEX(startDate time.Time) ([]*database.TAIEX, error) {
 			return nil, err
 		}
 
+		// Input target day
+		daySelect, err := (*c.WebDriver).FindElement(selenium.ByXPATH, fmt.Sprintf("//form[@class='main']//div[@id='d1']//select[@name='dd']//option[contains(@value, '%d')]", int(startDate.Day())))
+		if err != nil {
+			return nil, err
+		}
+		err = daySelect.Click()
+		if err != nil {
+			return nil, err
+		}
+
+		err = category.Click()
+		if err != nil {
+			return nil, err
+		}
+
 		err = searchBtn.Click()
 		if err != nil {
 			return nil, err
 		}
+
+		time.Sleep(2 * time.Second)
+		tableLength, err := (*c.WebDriver).FindElement(selenium.ByXPATH, "//div[@id='report-table_length']//select[@name='report-table_length']//option[contains(@value, -1)]")
+		if err != nil {
+			return nil, err
+		}
+		tableLength.Click()
+		if err != nil {
+			return nil, err
+		}
+
 		// Data table
 		table, err := (*c.WebDriver).FindElement(selenium.ByID, "report-table")
 		if err != nil {
 			log.Print(errors.Wrap(err, "FindElement: report-table"))
 			continue
 		}
-		rows, _ := table.FindElements(selenium.ByTagName, "tr")
+		tableBody, err := table.FindElement(selenium.ByTagName, "tbody")
+		if err != nil {
+			log.Print(errors.Wrap(err, "FindElement: table body"))
+			continue
+		}
+		rows, _ := tableBody.FindElements(selenium.ByTagName, "tr")
 		for _, row := range rows {
-			market := database.TAIEX{}
 			columns, _ := row.FindElements(selenium.ByTagName, "td")
+			symbol := getElenentText(&(columns[0]))
+			trade, err := DailyTradingModel.GetBySymbolNDate(symbol, startDate)
+			if err != nil {
+				log.Print(errors.Wrap(err, "Can't get record from database"))
+				continue
+			}
+			if trade.Date == (time.Time{}) {
+				trade.Symbol = symbol
+				trade.Date = startDate
+			}
 			for idx, cell := range columns {
 				switch idx {
-				case 0:
-					// Split 110/01/01 to string slice
-					seprateDate := strings.Split(getElenentText(&cell), "/")
-					// Get 110 and add 1911 to make AD year
-					year, _ := strconv.Atoi(seprateDate[0])
-					seprateDate[0] = strconv.Itoa(year + 1911)
-					// Make date string for lib parse
-					strDate := ""
-					for idx, element := range seprateDate {
-						strDate += element
-						if idx != len(seprateDate)-1 {
-							strDate += "-"
-						}
-					}
-					date, err := time.Parse("2006-01-02", strDate)
-					if err != nil {
-						log.Fatal(errors.Wrap(err, "Time parsing fail"))
-					}
-					market.Date = date
 				case 1:
 					value, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
-					market.OpeningIndex = value
+					trade.DividendYield = value
 				case 2:
-					value, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
-					market.HighestIndex = value
+					trade.DividendYear = getElenentText(&cell)
 				case 3:
 					value, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
-					market.LowestIndex = value
+					trade.PERadio = value
 				case 4:
 					value, _ := strconv.ParseFloat(strings.ReplaceAll(getElenentText(&cell), ",", ""), 64)
-					market.ClosingIndex = value
-				default:
+					trade.PBRadio = value
+				case 5:
+					trade.FiscalYearQuarter = getElenentText(&cell)
 				}
 			}
-			// Take data if date if not the default value
-			if market.Date != (time.Time{}) {
-				markets = append(markets, &market)
+			trades = append(trades, trade)
+			// Break out if data structure length is larger then threshold
+			if len(trades) >= 256 {
+				return trades, nil
 			}
 		}
-		startDate = startDate.AddDate(0, 1, 0)
-		// Break out loop if data structure length is larger then threshold
-		if len(markets) >= 256 {
-			break
-		}
+		startDate = startDate.AddDate(0, 0, 1)
 		// Sleep for a while, with random seed
 		delay, err := strconv.Atoi(os.Getenv("CRAWLER_DELAY"))
 		if err != nil {
@@ -109,5 +128,5 @@ func (c *Crawler) TAIEX(startDate time.Time) ([]*database.TAIEX, error) {
 		}
 		time.Sleep(time.Duration(common.RandInt(2, delay)) * time.Second)
 	}
-	return markets, nil
+	return trades, nil
 }

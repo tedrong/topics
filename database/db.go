@@ -30,17 +30,17 @@ var RedisClient *redis.Client
 // Init ...
 func Init(selectDB ...int) {
 	dbDSN := []DB{
-		{flag: DBStock, dsn: fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
+		{flag: DBStock, dsn: fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable TimeZone=UTC",
 			os.Getenv("DB_HOST"),
 			os.Getenv("DB_USER"),
 			os.Getenv("DB_PASS"),
 			os.Getenv("DB_NAME_STOCK"))},
-		{flag: DBTrend, dsn: fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
+		{flag: DBTrend, dsn: fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable TimeZone=UTC",
 			os.Getenv("DB_HOST"),
 			os.Getenv("DB_USER"),
 			os.Getenv("DB_PASS"),
 			os.Getenv("DB_NAME_TREND"))},
-		{flag: DBContent, dsn: fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
+		{flag: DBContent, dsn: fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable TimeZone=UTC",
 			os.Getenv("DB_HOST"),
 			os.Getenv("DB_USER"),
 			os.Getenv("DB_PASS"),

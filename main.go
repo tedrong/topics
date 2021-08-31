@@ -41,7 +41,7 @@ func main() {
 	// Start PostgreSQL and Redis on database 1 - it's used to store the JWT but you can use it for anythig else
 	database.Init(1)
 	seleniumService, c := crawler.StartWebInstance()
-	go crawler.StockInfo()
+	crawler.StockInfo()
 
 	TAIEXCron := crontab.TAIEX{BasicCron: crontab.BasicCron{}}
 	DailyTrading := crontab.DailyTrading{BasicCron: crontab.BasicCron{}}

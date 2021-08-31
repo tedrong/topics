@@ -19,13 +19,16 @@ var DailyTradingModel = new(models.DailyTrading)
 
 func (c *Crawler) DailyTrading(stocks *[]database.StockInfo) ([]*database.DailyTrading, error) {
 	trades := []*database.DailyTrading{}
-	nowDate := time.Now()
+	strDate := (time.Now()).Format("2006-01-02")
+	nowDate, err := time.Parse("2006-01-02", strDate)
+	if err != nil {
+		log.Fatal(errors.Wrap(err, "Time parsing fail"))
+	}
 	searchBtn, _ := (*c.WebDriver).FindElement(selenium.ByXPATH, "//form[@class='main ajax']//a[@class='button search']")
 	InputTextField, _ := (*c.WebDriver).FindElement(selenium.ByXPATH, "//form[@class='main ajax']//input[@name='stockNo']")
-
 	for _, element := range *stocks {
 		startDate := DailyTradingModel.LatestDate(element.Symbol)
-		log.Printf("The latest date of stock - %s is %s", element.Symbol, startDate)
+		// log.Printf("The latest date of stock - %s is %s", element.Symbol, startDate)
 		for nowDate.After(startDate) {
 			// Input target year
 			yearSelect, err := (*c.WebDriver).FindElement(selenium.ByXPATH, fmt.Sprintf("//form[@class='main ajax']//div[@id='d1']//select[@name='yy']//option[contains(@value, '%d')]", startDate.Year()))
@@ -57,12 +60,14 @@ func (c *Crawler) DailyTrading(stocks *[]database.StockInfo) ([]*database.DailyT
 				return nil, err
 			}
 
+			time.Sleep(2 * time.Second)
 			InputTextField.Clear()
 
 			// Data table
 			table, err := (*c.WebDriver).FindElement(selenium.ByID, "report-table")
 			if err != nil {
-				log.Fatal(errors.Wrap(err, "FindElement: report-table"))
+				log.Print(errors.Wrap(err, "FindElement: report-table"))
+				continue
 			}
 			rows, _ := table.FindElements(selenium.ByTagName, "tr")
 			for _, row := range rows {

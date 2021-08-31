@@ -24,7 +24,7 @@ func StockInfo() {
 		infos := []*database.StockInfo{}
 		tables, err := (*crawler.WebDriver).FindElements(selenium.ByTagName, "table")
 		if err != nil {
-			log.Fatal(errors.Wrap(err, "FindElement: can't get any table"))
+			log.Print(errors.Wrap(err, "FindElement: can't get any table"))
 		}
 
 		rows, _ := tables[1].FindElements(selenium.ByTagName, "tr")

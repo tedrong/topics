@@ -50,7 +50,8 @@ func (c *Crawler) Highlight(startDate time.Time) ([]*database.Highlight, error) 
 		// Data table
 		table, err := (*c.WebDriver).FindElement(selenium.ByID, "report-table")
 		if err != nil {
-			log.Fatal(errors.Wrap(err, "FindElement: report-table"))
+			log.Print(errors.Wrap(err, "FindElement: report-table"))
+			continue
 		}
 		rows, _ := table.FindElements(selenium.ByTagName, "tr")
 		for _, row := range rows {

@@ -28,6 +28,23 @@ func (m DailyTrading) LatestDate(symbol string) time.Time {
 	return trades[0].Date
 }
 
+func (m DailyTrading) LatestRatioDate() time.Time {
+	db := database.GetPG(database.DBStock)
+	trades := []database.DailyTrading{}
+	result := db.Where("pe_radio = ?", 0).Find(&trades)
+	if result.RowsAffected == 0 || result.Error != nil {
+		date, err := time.Parse("2006-01-02", "1970-01-01")
+		if err != nil {
+			log.Fatal(errors.Wrap(err, "Time parsing fail"))
+		}
+		return date
+	}
+	sort.Slice(trades, func(i, j int) bool {
+		return trades[i].Date.Before(trades[j].Date)
+	})
+	return trades[0].Date
+}
+
 func (m DailyTrading) Store(markets []*database.DailyTrading) {
 	db := database.GetPG(database.DBStock)
 	for _, element := range markets {
@@ -35,4 +52,14 @@ func (m DailyTrading) Store(markets []*database.DailyTrading) {
 			db.Create(&element)
 		}
 	}
+}
+
+func (m DailyTrading) GetBySymbolNDate(symbol string, date time.Time) (*database.DailyTrading, error) {
+	db := database.GetPG(database.DBStock)
+	trade := database.DailyTrading{}
+	result := db.Where("symbol = ?", symbol).Where("date = ?", date).Find(&trade)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &trade, nil
 }

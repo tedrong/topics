@@ -12,13 +12,13 @@ type StockInfo struct {
 	Name        string    `gorm:"type:text"`
 	MarketType  string    `gorm:"type:text"`
 	Industry    string    `gorm:"type:text"`
-	ListingDate time.Time `gorm:"type:timestamp with time zone;default:'1970-01-01 0:00AM'"`
+	ListingDate time.Time `gorm:"type:timestamp;default:'1970-01-01 0:00AM'"`
 }
 
 // Market table have every day's TAIEX in Taiwan
 type TAIEX struct {
 	gorm.Model
-	Date         time.Time `gorm:"type:timestamp with time zone;default:'1970-01-01 0:00AM'"`
+	Date         time.Time `gorm:"type:timestamp;default:'1970-01-01 0:00AM'"`
 	OpeningIndex float64   `gorm:"type:decimal(10,2);default:0"`
 	ClosingIndex float64   `gorm:"type:decimal(10,2);default:0"`
 	LowestIndex  float64   `gorm:"type:decimal(10,2);default:0"`
@@ -28,7 +28,7 @@ type TAIEX struct {
 type DailyTrading struct {
 	gorm.Model
 	Symbol            string    `gorm:"type:text"`
-	Date              time.Time `gorm:"type:timestamp with time zone;default:'1970-01-01 0:00AM'"`
+	Date              time.Time `gorm:"type:timestamp;default:'1970-01-01 0:00AM'"`
 	TradeVolume       int64     `gorm:"default:0"`
 	TradeValue        int64     `gorm:"default:0"`
 	OpeningPrice      float64   `gorm:"default:0"`
@@ -45,7 +45,7 @@ type DailyTrading struct {
 }
 type Highlight struct {
 	gorm.Model
-	Date        time.Time `gorm:"type:timestamp with time zone;default:'1970-01-01 0:00AM'"`
+	Date        time.Time `gorm:"type:timestamp;default:'1970-01-01 0:00AM'"`
 	TradeVolume float64   `gorm:"default:0"`
 	TradeValue  float64   `gorm:"default:0"`
 	Transaction float64   `gorm:"default:0"`
@@ -55,13 +55,13 @@ type Highlight struct {
 
 type IndividualStockTrading struct {
 	gorm.Model
-	Date time.Time `gorm:"type:timestamp with time zone;default:'1970-01-01 0:00AM'"`
+	Date time.Time `gorm:"type:timestamp;default:'1970-01-01 0:00AM'"`
 }
 
 // Trends table have every day's google search trends in Taiwan
 type Trend struct {
 	gorm.Model
-	Date  time.Time `gorm:"type:timestamp with time zone;default:'1970-01-01 0:00AM'"`
+	Date  time.Time `gorm:"type:timestamp;default:'1970-01-01 0:00AM'"`
 	Rank  int       `gorm:"type:int"`
 	Title string    `gorm:"type:text"`
 	// Daily postgres.Jsonb `gorm:"type:jsonb;default:'{}'"`
