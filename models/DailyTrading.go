@@ -31,7 +31,7 @@ func (m DailyTrading) LatestDate(symbol string) time.Time {
 func (m DailyTrading) LatestRatioDate() time.Time {
 	db := database.GetPG(database.DBStock)
 	trades := []database.DailyTrading{}
-	result := db.Where("pe_radio = ?", 0).Find(&trades)
+	result := db.Where("dividend_year = ?", "").Find(&trades)
 	if result.RowsAffected == 0 || result.Error != nil {
 		date, err := time.Parse("2006-01-02", "2005-09-02")
 		if err != nil {
