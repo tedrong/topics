@@ -28,8 +28,11 @@ func (c *Crawler) DailyTrading(stocks *[]database.StockInfo) ([]*database.DailyT
 	InputTextField, _ := (*c.WebDriver).FindElement(selenium.ByXPATH, "//form[@class='main ajax']//input[@name='stockNo']")
 	for _, element := range *stocks {
 		startDate := DailyTradingModel.LatestDate(element.Symbol)
-		// log.Printf("The latest date of stock - %s is %s", element.Symbol, startDate)
-		for nowDate.After(startDate) {
+		if startDate.Equal(nowDate.AddDate(0, 0, -1)) {
+			continue
+		}
+		log.Printf("The latest date of stock - %s is %s", element.Symbol, startDate)
+		for startDate.Before(nowDate.AddDate(0, 0, -1)) {
 			// Input target year
 			yearSelect, err := (*c.WebDriver).FindElement(selenium.ByXPATH, fmt.Sprintf("//form[@class='main ajax']//div[@id='d1']//select[@name='yy']//option[contains(@value, '%d')]", startDate.Year()))
 			if err != nil {
@@ -93,6 +96,7 @@ func (c *Crawler) DailyTrading(stocks *[]database.StockInfo) ([]*database.DailyT
 						date, err := time.Parse("2006-01-02", strDate)
 						if err != nil {
 							log.Panic(errors.Wrap(err, "Time parsing fail"))
+							break
 						}
 						trade.Date = date
 					case 1:

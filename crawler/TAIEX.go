@@ -19,7 +19,7 @@ func (c *Crawler) TAIEX(startDate time.Time) ([]*database.TAIEX, error) {
 	nowDate := time.Now()
 	searchBtn, _ := (*c.WebDriver).FindElement(selenium.ByXPATH, "//form[@class='main']//a[@class='button search']")
 
-	for nowDate.After(startDate) {
+	for startDate.Before(nowDate.AddDate(0, 0, -1)) {
 		// Input target year
 		yearSelect, err := (*c.WebDriver).FindElement(selenium.ByXPATH, fmt.Sprintf("//form[@class='main']//div[@id='d1']//select[@name='yy']//option[contains(@value, '%d')]", startDate.Year()))
 		if err != nil {
@@ -75,6 +75,7 @@ func (c *Crawler) TAIEX(startDate time.Time) ([]*database.TAIEX, error) {
 					date, err := time.Parse("2006-01-02", strDate)
 					if err != nil {
 						log.Panic(errors.Wrap(err, "Time parsing fail"))
+						break
 					}
 					market.Date = date
 				case 1:

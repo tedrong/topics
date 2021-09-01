@@ -20,7 +20,7 @@ func (c *Crawler) DailyTradingRatio(startDate time.Time) ([]*database.DailyTradi
 	searchBtn, _ := (*c.WebDriver).FindElement(selenium.ByXPATH, "//form[@class='main']//a[@class='button search']")
 	category, _ := (*c.WebDriver).FindElement(selenium.ByXPATH, "//form[@class='main']//select[@name='selectType']//option[contains(@value, 'ALL')]")
 
-	for nowDate.After(startDate) {
+	for startDate.Before(nowDate.AddDate(0, 0, -1)) {
 		// Input target year
 		yearSelect, err := (*c.WebDriver).FindElement(selenium.ByXPATH, fmt.Sprintf("//form[@class='main']//div[@id='d1']//select[@name='yy']//option[contains(@value, '%d')]", startDate.Year()))
 		if err != nil {
