@@ -47,10 +47,7 @@ func Init(selectDB ...int) {
 			os.Getenv("DB_NAME_CONTENT"))},
 	}
 	for _, element := range dbDSN {
-		conn, err := ConnectDB(element.dsn)
-		if err != nil {
-			log.Panic(err)
-		}
+		conn := ConnectDB(element.dsn)
 		DBSet[element.flag] = conn
 		migration(element.flag)
 	}
@@ -77,12 +74,13 @@ func Init(selectDB ...int) {
 }
 
 // Connect create the connection to postgresql and setting up gorm
-func ConnectDB(dsn string) (*gorm.DB, error) {
+func ConnectDB(dsn string) *gorm.DB {
 	conn, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		return nil, err
+		log.Panic(err)
+		return nil
 	}
-	return conn, nil
+	return conn
 }
 
 func migration(flag DBFlag) {

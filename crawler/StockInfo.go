@@ -24,7 +24,7 @@ func StockInfo() {
 		infos := []*database.StockInfo{}
 		tables, err := (*crawler.WebDriver).FindElements(selenium.ByTagName, "table")
 		if err != nil {
-			log.Print(errors.Wrap(err, "FindElement: can't get any table"))
+			log.Panic(errors.Wrap(err, "FindElement: can't get any table"))
 		}
 
 		rows, _ := tables[1].FindElements(selenium.ByTagName, "tr")
@@ -55,7 +55,7 @@ func StockInfo() {
 						}
 						date, err := time.Parse("2006-01-02", strDate)
 						if err != nil {
-							log.Fatal(errors.Wrap(err, "Time parsing fail"))
+							log.Panic(errors.Wrap(err, "Time parsing fail"))
 						}
 						info.ListingDate = date
 					}

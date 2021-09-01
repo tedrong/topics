@@ -49,7 +49,7 @@ func (c *Crawler) TAIEX(startDate time.Time) ([]*database.TAIEX, error) {
 		// Data table
 		table, err := (*c.WebDriver).FindElement(selenium.ByID, "report-table")
 		if err != nil {
-			log.Print(errors.Wrap(err, "FindElement: report-table"))
+			log.Panic(errors.Wrap(err, "FindElement: report-table"))
 			continue
 		}
 		rows, _ := table.FindElements(selenium.ByTagName, "tr")
@@ -74,7 +74,7 @@ func (c *Crawler) TAIEX(startDate time.Time) ([]*database.TAIEX, error) {
 					}
 					date, err := time.Parse("2006-01-02", strDate)
 					if err != nil {
-						log.Fatal(errors.Wrap(err, "Time parsing fail"))
+						log.Panic(errors.Wrap(err, "Time parsing fail"))
 					}
 					market.Date = date
 				case 1:

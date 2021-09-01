@@ -76,7 +76,7 @@ func Get() *Crawler {
 
 func (c *Crawler) GOTO() {
 	if err := (*c.WebDriver).Get(c.URL); err != nil {
-		log.Fatal(errors.Wrap(err, fmt.Sprintf("Connect to %s", c.URL)))
+		log.Panic(errors.Wrap(err, fmt.Sprintf("Connect to %s", c.URL)))
 	}
 }
 

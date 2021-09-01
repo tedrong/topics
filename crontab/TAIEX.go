@@ -32,7 +32,7 @@ func (m *TAIEX) Do() {
 	// Startup crawler with date(first day of current month)
 	TAIEX, err := crawler.TAIEX(time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.Local))
 	if err != nil {
-		log.Fatal(errors.Wrap(err, "Get TAIEX fail"))
+		log.Print(errors.Wrap(err, "Get TAIEX fail"))
 	}
 	TAIEXModel.Store(TAIEX)
 	crawler.Mutex.Unlock()

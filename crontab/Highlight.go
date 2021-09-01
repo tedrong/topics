@@ -32,7 +32,7 @@ func (m *Highlight) Do() {
 	// Startup crawler with date(first day of current month)
 	Highlight, err := crawler.Highlight(time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.Local))
 	if err != nil {
-		log.Fatal(errors.Wrap(err, "Get highlight fail"))
+		log.Print(errors.Wrap(err, "Get highlight fail"))
 	}
 	HighlightModel.Store(Highlight)
 	crawler.Mutex.Unlock()

@@ -19,7 +19,7 @@ var authModel = new(AuthModel)
 func (m UserModel) Login(form forms.LoginForm) (user database.User, token Token, err error) {
 	result := database.GetPG(database.DBContent).Where("email = ?", strings.ToLower(form.Email)).Find(&user)
 	if result.Error != nil {
-		log.Println(result.Error)
+		log.Panic(result.Error)
 		return user, token, result.Error
 	}
 

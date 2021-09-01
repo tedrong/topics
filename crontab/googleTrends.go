@@ -35,16 +35,16 @@ func (d *DailyTrends) Do() {
 	ctx := context.Background()
 	dailySearches, err := gogtrends.Daily(ctx, langEn, locUS)
 	if err != nil {
-		log.Fatal(errors.Wrap(err, "Google trends - Daily"))
+		log.Print(errors.Wrap(err, "Google trends - Daily"))
 		return
 	}
 	for _, element := range dailySearches {
 		count, err := strconv.Atoi(strings.Replace(element.FormattedTraffic, "K+", "000", 1))
 		if err != nil {
-			log.Fatal(errors.Wrap(err, "Item count replace K+ to 1000 fail"))
+			log.Print(errors.Wrap(err, "Item count replace K+ to 1000 fail"))
 			return
 		}
 		trendModel.Store(count, element.Title.Query)
 	}
-	log.Println("Daily trends end")
+	log.Print("Daily trends end")
 }

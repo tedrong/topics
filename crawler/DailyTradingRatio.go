@@ -76,12 +76,12 @@ func (c *Crawler) DailyTradingRatio(startDate time.Time) ([]*database.DailyTradi
 		// Data table
 		table, err := (*c.WebDriver).FindElement(selenium.ByID, "report-table")
 		if err != nil {
-			log.Print(errors.Wrap(err, "FindElement: report-table"))
+			log.Panic(errors.Wrap(err, "FindElement: report-table"))
 			continue
 		}
 		tableBody, err := table.FindElement(selenium.ByTagName, "tbody")
 		if err != nil {
-			log.Print(errors.Wrap(err, "FindElement: table body"))
+			log.Panic(errors.Wrap(err, "FindElement: table body"))
 			continue
 		}
 		rows, _ := tableBody.FindElements(selenium.ByTagName, "tr")
@@ -90,7 +90,7 @@ func (c *Crawler) DailyTradingRatio(startDate time.Time) ([]*database.DailyTradi
 			symbol := getElenentText(&(columns[0]))
 			trade, err := DailyTradingModel.GetBySymbolNDate(symbol, startDate)
 			if err != nil {
-				log.Print(errors.Wrap(err, "Can't get record from database"))
+				log.Panic(errors.Wrap(err, "Can't get record from database"))
 				continue
 			}
 			if trade.Date == (time.Time{}) {

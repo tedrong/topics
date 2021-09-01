@@ -17,7 +17,7 @@ func (m Highlight) LatestDate() time.Time {
 	if result.Error != nil {
 		date, err := time.Parse("2006-01-02", "1970-01-01")
 		if err != nil {
-			log.Fatal(errors.Wrap(err, "Time parsing fail"))
+			log.Panic(errors.Wrap(err, "Time parsing fail"))
 		}
 		return date
 	}

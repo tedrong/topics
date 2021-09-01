@@ -22,7 +22,7 @@ func (c *Crawler) DailyTrading(stocks *[]database.StockInfo) ([]*database.DailyT
 	strDate := (time.Now()).Format("2006-01-02")
 	nowDate, err := time.Parse("2006-01-02", strDate)
 	if err != nil {
-		log.Fatal(errors.Wrap(err, "Time parsing fail"))
+		log.Panic(errors.Wrap(err, "Time parsing fail"))
 	}
 	searchBtn, _ := (*c.WebDriver).FindElement(selenium.ByXPATH, "//form[@class='main ajax']//a[@class='button search']")
 	InputTextField, _ := (*c.WebDriver).FindElement(selenium.ByXPATH, "//form[@class='main ajax']//input[@name='stockNo']")
@@ -66,7 +66,7 @@ func (c *Crawler) DailyTrading(stocks *[]database.StockInfo) ([]*database.DailyT
 			// Data table
 			table, err := (*c.WebDriver).FindElement(selenium.ByID, "report-table")
 			if err != nil {
-				log.Print(errors.Wrap(err, "FindElement: report-table"))
+				log.Panic(errors.Wrap(err, "FindElement: report-table"))
 				continue
 			}
 			rows, _ := table.FindElements(selenium.ByTagName, "tr")
@@ -92,7 +92,7 @@ func (c *Crawler) DailyTrading(stocks *[]database.StockInfo) ([]*database.DailyT
 						}
 						date, err := time.Parse("2006-01-02", strDate)
 						if err != nil {
-							log.Fatal(errors.Wrap(err, "Time parsing fail"))
+							log.Panic(errors.Wrap(err, "Time parsing fail"))
 						}
 						trade.Date = date
 					case 1:

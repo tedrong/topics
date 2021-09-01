@@ -32,7 +32,7 @@ func (m *DailyTrading) Do() {
 	// Startup crawler with date(first day of current month)
 	DailyTrading, err := crawler.DailyTrading(stocks)
 	if err != nil {
-		log.Fatal(errors.Wrap(err, "Get daily trading fail"))
+		log.Print(errors.Wrap(err, "Get daily trading fail"))
 	}
 	DailyTradingModel.Store(DailyTrading)
 
@@ -46,7 +46,7 @@ func (m *DailyTrading) Do() {
 	time.Sleep(2 * time.Second)
 	DailyTrading, err = crawler.DailyTradingRatio(time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, time.Local))
 	if err != nil {
-		log.Fatal(errors.Wrap(err, "Get daily trading supplement fail"))
+		log.Print(errors.Wrap(err, "Get daily trading supplement fail"))
 	}
 	DailyTradingModel.Store(DailyTrading)
 

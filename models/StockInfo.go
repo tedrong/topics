@@ -24,3 +24,13 @@ func (m StockInfoModel) Store(info []*database.StockInfo) {
 		}
 	}
 }
+
+func (m StockInfoModel) GetBySymbol(symbol string) (*database.StockInfo, error) {
+	db := database.GetPG(database.DBStock)
+	info := database.StockInfo{}
+	result := db.Where("symbol = ?", symbol).Find(&info)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &info, nil
+}
