@@ -16,12 +16,11 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/json-iterator/go v1.1.11 // indirect
 	github.com/mattn/go-isatty v0.0.13 // indirect
-	github.com/myesui/uuid v1.0.0 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/robfig/cron/v3 v3.0.1
+	github.com/satori/go.uuid v1.2.0
 	github.com/stretchr/testify v1.7.0
 	github.com/tebeka/selenium v0.9.9
-	github.com/twinj/uuid v1.0.0
 	github.com/ugorji/go v1.2.6 // indirect
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5
 	golang.org/x/sys v0.0.0-20210817190340-bfb29a6856f2 // indirect
@@ -29,7 +28,6 @@ require (
 	google.golang.org/api v0.7.0
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
-	gopkg.in/stretchr/testify.v1 v1.2.2 // indirect
 	gorm.io/driver/postgres v1.1.0
 	gorm.io/gorm v1.21.13
 )

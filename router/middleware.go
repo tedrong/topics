@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	uuid "github.com/satori/go.uuid"
 	"github.com/topics/controllers"
-	"github.com/twinj/uuid"
 )
 
 //CORSMiddleware ...

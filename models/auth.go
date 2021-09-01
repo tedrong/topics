@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
+	uuid "github.com/satori/go.uuid"
 	"github.com/topics/database"
-	uuid "github.com/twinj/uuid"
 )
 
 //TokenDetails ...
