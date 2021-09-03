@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/jinzhu/now"
 	"github.com/pkg/errors"
 	"github.com/tebeka/selenium"
 	"github.com/topics/common"
@@ -18,21 +19,29 @@ import (
 var DailyTradingModel = new(models.DailyTrading)
 
 func (c *Crawler) DailyTrading(stocks *[]database.StockInfo) ([]*database.DailyTrading, error) {
+	// Declare the row data in database
 	trades := []*database.DailyTrading{}
+	// Make a date string with out hour/minut/second and convert back to time.Time
 	strDate := (time.Now()).Format("2006-01-02")
 	nowDate, err := time.Parse("2006-01-02", strDate)
 	if err != nil {
 		log.Panic(errors.Wrap(err, "Time parsing fail"))
 	}
+	// Locate the search button and stock symbol input field
 	searchBtn, _ := (*c.WebDriver).FindElement(selenium.ByXPATH, "//form[@class='main ajax']//a[@class='button search']")
 	InputTextField, _ := (*c.WebDriver).FindElement(selenium.ByXPATH, "//form[@class='main ajax']//input[@name='stockNo']")
+
+	// Loop for stocks
 	for _, element := range *stocks {
+		// Get latest stock information from database
 		startDate := DailyTradingModel.LatestDate(element.Symbol)
+		// Skip stock if it's already has newest information
 		if startDate.Equal(nowDate.AddDate(0, 0, -1)) {
 			continue
 		}
 		log.Printf("The latest date of stock - %s is %s", element.Symbol, startDate)
-		for startDate.Before(nowDate.AddDate(0, 0, -1)) {
+		// Loop for dates
+		for startDate.Before(nowDate) {
 			// Input target year
 			yearSelect, err := (*c.WebDriver).FindElement(selenium.ByXPATH, fmt.Sprintf("//form[@class='main ajax']//div[@id='d1']//select[@name='yy']//option[contains(@value, '%d')]", startDate.Year()))
 			if err != nil {
@@ -128,16 +137,20 @@ func (c *Crawler) DailyTrading(stocks *[]database.StockInfo) ([]*database.DailyT
 						trade.Transaction = value
 					}
 				}
-				// Take data if date if not the default value
-				if trade.Date != (time.Time{}) {
+				// Take data if there are new result from table, and data time shouldn't be default value
+				if (trade.Date.Equal(startDate) || trade.Date.After(startDate)) && trade.Date != (time.Time{}) {
 					trades = append(trades, &trade)
 				}
-				// Break out if data structure length is larger then threshold
-				if len(trades) >= 256 {
-					return trades, nil
-				}
 			}
-			startDate = startDate.AddDate(0, 1, 0)
+			if startDate.Day() == (now.With(startDate).EndOfMonth()).Day() {
+				startDate = startDate.AddDate(0, 0, 1)
+			} else {
+				startDate = startDate.AddDate(0, 1, 0)
+			}
+			// Break out if data structure length is larger then threshold
+			if len(trades) >= 256 {
+				return trades, nil
+			}
 			// Sleep for a while, with random seed
 			delay, err := strconv.Atoi(os.Getenv("CRAWLER_DELAY"))
 			if err != nil {

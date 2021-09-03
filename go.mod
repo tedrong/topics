@@ -13,6 +13,7 @@ require (
 	github.com/google/go-github/v27 v27.0.6
 	github.com/groovili/gogtrends v1.7.0
 	github.com/jackc/pgx/v4 v4.13.0 // indirect
+	github.com/jinzhu/now v1.1.2
 	github.com/joho/godotenv v1.3.0
 	github.com/json-iterator/go v1.1.11 // indirect
 	github.com/mattn/go-isatty v0.0.13 // indirect

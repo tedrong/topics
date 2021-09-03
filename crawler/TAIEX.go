@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/jinzhu/now"
 	"github.com/pkg/errors"
 	"github.com/tebeka/selenium"
 	"github.com/topics/common"
@@ -16,10 +17,15 @@ import (
 
 func (c *Crawler) TAIEX(startDate time.Time) ([]*database.TAIEX, error) {
 	markets := []*database.TAIEX{}
-	nowDate := time.Now()
+	// Make a date string with out hour/minut/second and convert back to time.Time
+	strDate := (time.Now()).Format("2006-01-02")
+	nowDate, err := time.Parse("2006-01-02", strDate)
+	if err != nil {
+		log.Panic(errors.Wrap(err, "Time parsing fail"))
+	}
 	searchBtn, _ := (*c.WebDriver).FindElement(selenium.ByXPATH, "//form[@class='main']//a[@class='button search']")
 
-	for startDate.Before(nowDate.AddDate(0, 0, -1)) {
+	for startDate.Before(nowDate) {
 		// Input target year
 		yearSelect, err := (*c.WebDriver).FindElement(selenium.ByXPATH, fmt.Sprintf("//form[@class='main']//div[@id='d1']//select[@name='yy']//option[contains(@value, '%d')]", startDate.Year()))
 		if err != nil {
@@ -94,11 +100,15 @@ func (c *Crawler) TAIEX(startDate time.Time) ([]*database.TAIEX, error) {
 				}
 			}
 			// Take data if date if not the default value
-			if market.Date != (time.Time{}) {
+			if (market.Date.Equal(startDate) || market.Date.After(startDate)) && market.Date != (time.Time{}) {
 				markets = append(markets, &market)
 			}
 		}
-		startDate = startDate.AddDate(0, 1, 0)
+		if startDate.Day() == (now.With(startDate).EndOfMonth()).Day() {
+			startDate = startDate.AddDate(0, 0, 1)
+		} else {
+			startDate = startDate.AddDate(0, 1, 0)
+		}
 		// Break out loop if data structure length is larger then threshold
 		if len(markets) >= 256 {
 			break
