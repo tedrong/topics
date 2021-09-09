@@ -20,11 +20,13 @@ function* fetchTodoSaga() {
       })
     );
   } catch (e) {
-    yield put(
-      fetchTodoFailure({
-        error: e.message,
-      })
-    );
+    if (axios.isAxiosError(e)) {
+      yield put(
+        fetchTodoFailure({
+          error: e.message,
+        })
+      );
+    }
   }
 }
 

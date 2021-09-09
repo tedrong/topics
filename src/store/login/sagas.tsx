@@ -28,11 +28,13 @@ function* fetchLoginSaga() {
       })
     );
   } catch (e) {
-    yield put(
-      fetchLoginFailure({
-        error: e.message,
-      })
-    );
+    if (axios.isAxiosError(e)) {
+      yield put(
+        fetchLoginFailure({
+          error: e.message,
+        })
+      );
+    }
   }
 }
 
