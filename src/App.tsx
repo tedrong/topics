@@ -1,7 +1,12 @@
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import Login from "./Login";
+import Frame from "./route/frame";
+import mockup from "./store/mockData";
 
-function App() {
+export default function App() {
+  if ("demo" === process.env.REACT_APP_STAGE) {
+    mockup();
+  }
   return (
     <BrowserRouter>
       <Switch>
@@ -9,10 +14,8 @@ function App() {
           <Redirect to="/login" />
         </Route>
         <Route path="/login" component={Login} />
-        <Route path="/home" />
+        <Route path="/home" component={Frame} />
       </Switch>
     </BrowserRouter>
   );
 }
-
-export default App;

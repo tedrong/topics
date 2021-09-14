@@ -5,10 +5,8 @@ import {
 } from "./actionTypes";
 
 export interface ITokens {
-  accessToken: string;
-  refreshToken: string;
-  tokenType: string;
-  uid: string;
+  access_token: string;
+  refresh_token: string;
 }
 
 export interface LoginState {

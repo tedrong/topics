@@ -9,10 +9,8 @@ import { LoginActions, LoginState } from "./types";
 const initialState: LoginState = {
   pending: false,
   tokens: {
-    accessToken: "",
-    refreshToken: "",
-    tokenType: "",
-    uid: "",
+    access_token: "",
+    refresh_token: "",
   },
   error: null,
 };

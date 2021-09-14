@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getPendingSelector,
@@ -30,7 +31,7 @@ import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
 import logo from "./material/landscape.png";
 
 const useStyles = makeStyles(() => ({
-  root: {
+  container: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -67,9 +68,13 @@ export default function LoginBox() {
   const login = useSelector(getLoginSelector);
   const error = useSelector(getErrorSelector);
 
+  if (login.access_token != "") {
+    return <Redirect to="/home/welcome" />;
+  }
+
   return (
     <React.Fragment>
-      <Container className={classes.root} maxWidth="md">
+      <Container className={classes.container} maxWidth="md">
         <Paper className={classes.paper} variant="outlined">
           <CssBaseline />
           <Avatar className={classes.avatar} src={logo} alt="logo" />
@@ -94,9 +99,7 @@ export default function LoginBox() {
             }}
             onSubmit={(values, { setSubmitting }) => {
               dispatch(fetchLoginRequest());
-              setTimeout(() => {
-                setSubmitting(false);
-              }, 2000);
+              setSubmitting(false);
             }}
           >
             {({ submitForm, isSubmitting }) => (

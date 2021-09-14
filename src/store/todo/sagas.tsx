@@ -34,8 +34,6 @@ function* fetchTodoSaga() {
   Starts worker saga on latest dispatched `FETCH_TODO_REQUEST` action.
   Allows concurrent increments.
 */
-function* todoSaga() {
+export default function* todoSaga() {
   yield all([takeLatest(FETCH_TODO_REQUEST, fetchTodoSaga)]);
 }
-
-export default todoSaga;
