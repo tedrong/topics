@@ -1,179 +1,159 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { Helmet } from "react-helmet";
 import { Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getPendingSelector,
+  // getPendingSelector,
   getLoginSelector,
-  getErrorSelector,
+  // getErrorSelector,
 } from "./store/login/selectors";
 import { fetchLoginRequest } from "./store/login/actions";
 
-import { Formik, Form, Field } from "formik";
-import {
-  TextField,
-  fieldToTextField,
-  TextFieldProps,
-} from "formik-material-ui";
+import * as Yup from "yup";
+import { Formik } from "formik";
 import {
   Avatar,
+  Box,
   Button,
   Container,
   CssBaseline,
-  InputAdornment,
-  IconButton,
-  LinearProgress,
-  makeStyles,
-  Paper,
-  TextField as MuiTextField,
+  TextField,
   Typography,
-} from "@material-ui/core";
-import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
+} from "@mui/material";
+
+import styled from "styled-components";
 import logo from "./material/landscape.png";
 
-const useStyles = makeStyles(() => ({
-  container: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100vh",
-    minWidth: "300px",
-  },
-  paper: {
-    width: "32vw",
-    padding: "5%",
-    textAlign: "center",
-  },
-  avatar: {
-    margin: "auto",
-    width: "60%",
-    height: "auto",
-    borderRadius: "0%",
-    backgroundColor: "white",
-  },
-  submitBtn: {
-    height: "5vh",
-    marginTop: "1vh",
-  },
-}));
+const StyledBox = styled(Box)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  min-width: 300px;
+  background-color: #fafafa;
+`;
 
-interface Values {
-  email: string;
-  password: string;
-}
+const StyledAvatar = styled(Avatar)`
+  margin: auto;
+  border-radius: 0%;
+  background-color: white;
+`;
+
+const StyledForm = styled.form`
+  padding: 10%;
+  align-items: center;
+  text-align: center;
+  border: 1px lightgray solid;
+  background-color: white;
+`;
 
 export default function LoginBox() {
-  const classes = useStyles();
   const dispatch = useDispatch();
-  const pending = useSelector(getPendingSelector);
+  // const pending = useSelector(getPendingSelector);
   const login = useSelector(getLoginSelector);
-  const error = useSelector(getErrorSelector);
+  // const error = useSelector(getErrorSelector);
 
-  if (login.access_token != "") {
+  if (login.access_token !== "") {
     return <Redirect to="/home/welcome" />;
   }
 
   return (
     <React.Fragment>
-      <Container className={classes.container} maxWidth="md">
-        <Paper className={classes.paper} variant="outlined">
-          <CssBaseline />
-          <Avatar className={classes.avatar} src={logo} alt="logo" />
-          <Typography component="h6" variant="h5">
-            Frontend
-          </Typography>
+      <Helmet>
+        <title>Login | Topics</title>
+      </Helmet>
+      <StyledBox>
+        <Container maxWidth="sm">
           <Formik
             initialValues={{
               email: "",
               password: "",
             }}
-            validate={(values) => {
-              const errors: Partial<Values> = {};
-              if (!values.email) {
-                errors.email = "Required";
-              } else if (
-                !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-              ) {
-                errors.email = "Invalid email address";
-              }
-              return errors;
-            }}
+            validationSchema={Yup.object().shape({
+              email: Yup.string()
+                .email("Must be a valid email")
+                .max(255)
+                .required("Email is required"),
+              password: Yup.string().max(255).required("Password is required"),
+            })}
             onSubmit={(values, { setSubmitting }) => {
+              console.log(values);
               dispatch(fetchLoginRequest());
               setSubmitting(false);
             }}
           >
-            {({ submitForm, isSubmitting }) => (
-              <Form>
-                <Field
+            {({
+              errors,
+              handleBlur,
+              handleChange,
+              handleSubmit,
+              isSubmitting,
+              touched,
+              values,
+            }) => (
+              <StyledForm onSubmit={handleSubmit}>
+                <Box sx={{ mb: 3 }}>
+                  <StyledAvatar
+                    src={logo}
+                    alt="logo"
+                    variant={"square"}
+                    sx={{ width: "8vw", height: "auto" }}
+                  />
+                  <CssBaseline />
+                  <Typography color="textPrimary" variant="h2">
+                    Topics
+                  </Typography>
+                  <Typography
+                    color="textSecondary"
+                    gutterBottom
+                    variant="body2"
+                  >
+                    Login in on the internal platform
+                  </Typography>
+                </Box>
+                <TextField
+                  error={Boolean(touched.email && errors.email)}
                   fullWidth
-                  autoFocus
-                  component={TextField}
-                  variant="outlined"
+                  helperText={touched.email && errors.email}
+                  label="Email Address"
                   margin="normal"
-                  id="email"
                   name="email"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
                   type="email"
-                  label="Email"
-                />
-                <br />
-                <Field
-                  fullWidth
-                  autoFocus
-                  component={PasswordTextField}
+                  value={values.email}
                   variant="outlined"
-                  margin="normal"
-                  id="password"
-                  name="password"
-                  type="password"
-                  label="Password"
-                  autoComplete="current-password"
                 />
-                {pending && <LinearProgress />}
-                <br />
-                <Button
-                  className={classes.submitBtn}
+                <TextField
+                  error={Boolean(touched.password && errors.password)}
                   fullWidth
-                  variant="contained"
-                  color="primary"
-                  disabled={pending}
-                  onClick={submitForm}
-                >
-                  Submit
-                </Button>
-              </Form>
+                  helperText={touched.password && errors.password}
+                  label="Password"
+                  margin="normal"
+                  name="password"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  type="password"
+                  value={values.password}
+                  variant="outlined"
+                />
+                <Box sx={{ py: 2 }}>
+                  <Button
+                    color="success"
+                    disabled={isSubmitting}
+                    fullWidth
+                    size="large"
+                    type="submit"
+                    variant="contained"
+                  >
+                    Login
+                  </Button>
+                </Box>
+              </StyledForm>
             )}
           </Formik>
-        </Paper>
-      </Container>
+        </Container>
+      </StyledBox>
     </React.Fragment>
-  );
-}
-
-function PasswordTextField(props: TextFieldProps) {
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-  const handleMouseDownPassword = (event: React.SyntheticEvent) => {
-    event.preventDefault();
-  };
-  return (
-    <MuiTextField
-      {...fieldToTextField(props)}
-      type={showPassword ? "text" : "password"}
-      InputProps={{
-        endAdornment: (
-          <InputAdornment position="end">
-            <IconButton
-              aria-label="toggle password visibility"
-              onClick={handleClickShowPassword}
-              onMouseDown={handleMouseDownPassword}
-            >
-              {showPassword ? <BsFillEyeFill /> : <BsFillEyeSlashFill />}
-            </IconButton>
-          </InputAdornment>
-        ),
-      }}
-    />
   );
 }

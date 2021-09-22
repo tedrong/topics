@@ -11,17 +11,17 @@ import {
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  TextField,
-  fieldToTextField,
-  TextFieldProps,
-} from "formik-material-ui";
-import {
+  AppBar,
   Badge,
   Button,
   Container,
   makeStyles,
   TextField as MuiTextField,
-} from "@material-ui/core";
+  Box,
+  Hidden,
+  IconButton,
+  Toolbar,
+} from "@mui/material";
 
 import {
   FaBell,
@@ -37,9 +37,9 @@ import {
   // FaUser,
 } from "react-icons/fa";
 
-import Pending from "../component/pending";
-import NotFound from "../component/notFound";
-const Welcome = React.lazy(() => import("./welcome"));
+import Pending from "../components/Pending";
+import NotFound from "../components/NotFound";
+const Welcome = React.lazy(() => import("./Welcome"));
 
 const Layout = styled.div`
   background-color: #f8f9fa;
@@ -98,17 +98,20 @@ export default function Frame() {
 function NavBar() {
   const handleLogout = () => {};
   return (
-    <StyledNavBar>
-      <CollapseIcon></CollapseIcon>
-      <NavBarItem>
-        <Button style={{ color: "white" }} onClick={handleLogout}>
-          <FaSignOutAlt />
-        </Button>
-        <Badge badgeContent={4} color="primary">
-          <FaBell />
-        </Badge>
-      </NavBarItem>
-    </StyledNavBar>
+    <AppBar>
+      <Toolbar>
+        <Box sx={{ flexGrow: 1 }} />
+        <Hidden xlDown>
+          <IconButton color="inherit">
+            <Badge badgeContent={10} color="primary" variant="dot"></Badge>
+          </IconButton>
+          <IconButton color="inherit"></IconButton>
+        </Hidden>
+        <Hidden lgUp>
+          <IconButton color="inherit"></IconButton>
+        </Hidden>
+      </Toolbar>
+    </AppBar>
   );
 }
 
