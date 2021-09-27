@@ -7,6 +7,9 @@ import { FiHardDrive } from "react-icons/fi";
 
 import ProgressCard from "../components/ProgressCard";
 import InfoCard from "../components/InfoCard";
+import SimpleBarChart from "../components/SimpleBarChart";
+import SimpleDoughnutChart from "../components/SimpleDoughnutChart";
+import SimpleTable from "../components/SimpleTable";
 
 export default function Dashboard() {
   return (
@@ -54,6 +57,15 @@ export default function Dashboard() {
                 icon={FaClock}
                 color={indigo[600]}
               />
+            </Grid>
+            <Grid item lg={8} md={12} xl={9} xs={12}>
+              <SimpleBarChart />
+            </Grid>
+            <Grid item lg={4} md={6} xl={3} xs={12}>
+              <SimpleDoughnutChart />
+            </Grid>
+            <Grid item lg={12} sm={12} xl={12} xs={12}>
+              <SimpleTable />
             </Grid>
           </Grid>
         </Container>
