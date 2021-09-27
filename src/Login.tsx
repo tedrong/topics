@@ -1,6 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link as RouterLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   // getPendingSelector,
@@ -17,6 +17,7 @@ import {
   Button,
   Container,
   CssBaseline,
+  Link,
   TextField,
   Typography,
 } from "@mui/material";
@@ -149,6 +150,16 @@ export default function LoginBox() {
                     Login
                   </Button>
                 </Box>
+                <Typography color="textSecondary" variant="body1">
+                  Don&apos;t have an account?{" "}
+                  <Link
+                    component={RouterLink}
+                    to="/register"
+                    underline="hover"
+                  >
+                    Sign up
+                  </Link>
+                </Typography>
               </StyledForm>
             )}
           </Formik>

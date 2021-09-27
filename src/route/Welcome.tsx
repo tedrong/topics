@@ -1,31 +1,32 @@
-import React from "react";
-import { useDispatch } from "react-redux";
-import { makeStyles } from "@mui/styles";
-import { Typography } from "@mui/material";
+import styled from "styled-components";
+import { Helmet } from "react-helmet";
 
-const useStyles = makeStyles({
-  root: {
-    textAlign: "center",
-    marginTop: "20%",
-  },
-  mainTitle: {
-    color: "#A3B3C2",
-    fontSize: "4vw",
-  },
-  subTitle: {
-    color: "#1D4157",
-    fontSize: "3vw",
-    fontWeight: "bold",
-  },
-});
+const Content = styled.div`
+  text-align: center;
+  margin-top: 20%;
+`;
+
+const MainTitle = styled.div`
+  color: #a9dfbf;
+  font-size: 8vh;
+`;
+
+const SubTitle = styled.div`
+  color: #145a32;
+  font-size: 6vh;
+  font-weight: bold;
+`;
 
 export default function Welcome() {
-  const dispatch = useDispatch();
-  const classes = useStyles();
   return (
-    <div className={classes.root}>
-      <div className={classes.mainTitle}>{"Welcome"}</div>
-      <Typography className={classes.subTitle}>{"Topics"}</Typography>
-    </div>
+    <>
+      <Helmet>
+        <title>Welcome | Topics</title>
+      </Helmet>
+      <Content>
+        <MainTitle>{"Welcome to Topics system"}</MainTitle>
+        <SubTitle>{"Administration Web Server"}</SubTitle>
+      </Content>
+    </>
   );
 }
