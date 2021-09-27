@@ -5,6 +5,7 @@ import theme from "./theme";
 import mockup from "./store/mockData";
 
 import Login from "./Login";
+import Register from "./route/Register";
 import Frame from "./route/Frame";
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
           <Redirect to="/login" />
         </Route>
         <Route path="/login" component={Login} />
+        <Route path="/register" component={Register} />S
         <Route path="/home" component={Frame} />
       </Switch>
     </ThemeProvider>
