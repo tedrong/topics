@@ -2,16 +2,15 @@ package crawler
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/pkg/errors"
 	"github.com/tebeka/selenium"
 	"github.com/topics/common"
 	"github.com/topics/database"
+	"github.com/topics/logging"
 )
 
 func (c *Crawler) DailyTradingRatio(startDate time.Time) ([]*database.DailyTrading, error) {
@@ -20,7 +19,7 @@ func (c *Crawler) DailyTradingRatio(startDate time.Time) ([]*database.DailyTradi
 	strDate := (time.Now()).Format("2006-01-02")
 	nowDate, err := time.Parse("2006-01-02", strDate)
 	if err != nil {
-		log.Panic(errors.Wrap(err, "Time parsing fail"))
+		c.LogJob(logging.Get().Panic(), CR_DailyTradingRatio).Err(err)
 	}
 	searchBtn, _ := (*c.WebDriver).FindElement(selenium.ByXPATH, "//form[@class='main']//a[@class='button search']")
 	category, _ := (*c.WebDriver).FindElement(selenium.ByXPATH, "//form[@class='main']//select[@name='selectType']//option[contains(@value, 'ALL')]")
@@ -71,7 +70,8 @@ func (c *Crawler) DailyTradingRatio(startDate time.Time) ([]*database.DailyTradi
 		time.Sleep(2 * time.Second)
 		tableLength, err := (*c.WebDriver).FindElement(selenium.ByXPATH, "//div[@id='report-table_length']//select[@name='report-table_length']//option[contains(@value, -1)]")
 		if err != nil {
-			return nil, err
+			startDate = startDate.AddDate(0, 0, 1)
+			continue
 		}
 		tableLength.Click()
 		if err != nil {
@@ -81,12 +81,12 @@ func (c *Crawler) DailyTradingRatio(startDate time.Time) ([]*database.DailyTradi
 		// Data table
 		table, err := (*c.WebDriver).FindElement(selenium.ByID, "report-table")
 		if err != nil {
-			log.Panic(errors.Wrap(err, "FindElement: report-table"))
+			c.LogJob(logging.Get().Panic(), CR_DailyTradingRatio).Err(err)
 			continue
 		}
 		tableBody, err := table.FindElement(selenium.ByTagName, "tbody")
 		if err != nil {
-			log.Panic(errors.Wrap(err, "FindElement: table body"))
+			c.LogJob(logging.Get().Panic(), CR_DailyTradingRatio).Err(err)
 			continue
 		}
 		rows, _ := tableBody.FindElements(selenium.ByTagName, "tr")
@@ -95,7 +95,7 @@ func (c *Crawler) DailyTradingRatio(startDate time.Time) ([]*database.DailyTradi
 			symbol := getElenentText(&(columns[0]))
 			trade, err := DailyTradingModel.GetBySymbolNDate(symbol, startDate)
 			if err != nil {
-				log.Panic(errors.Wrap(err, "Can't get record from database"))
+				c.LogJob(logging.Get().Panic(), CR_DailyTradingRatio).Err(err)
 				continue
 			}
 			if trade.Date == (time.Time{}) {

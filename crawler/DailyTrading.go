@@ -2,17 +2,16 @@ package crawler
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/jinzhu/now"
-	"github.com/pkg/errors"
 	"github.com/tebeka/selenium"
 	"github.com/topics/common"
 	"github.com/topics/database"
+	"github.com/topics/logging"
 	"github.com/topics/models"
 )
 
@@ -25,7 +24,7 @@ func (c *Crawler) DailyTrading(stocks *[]database.StockInfo) ([]*database.DailyT
 	strDate := (time.Now()).Format("2006-01-02")
 	nowDate, err := time.Parse("2006-01-02", strDate)
 	if err != nil {
-		log.Panic(errors.Wrap(err, "Time parsing fail"))
+		c.LogJob(logging.Get().Panic(), CR_DailyTrading).Err(err)
 	}
 	// Locate the search button and stock symbol input field
 	searchBtn, _ := (*c.WebDriver).FindElement(selenium.ByXPATH, "//form[@class='main ajax']//a[@class='button search']")
@@ -39,7 +38,7 @@ func (c *Crawler) DailyTrading(stocks *[]database.StockInfo) ([]*database.DailyT
 		if startDate.Equal(nowDate.AddDate(0, 0, -1)) {
 			continue
 		}
-		log.Printf("The latest date of stock - %s is %s", element.Symbol, startDate)
+		c.LogJob(logging.Get().Debug(), CR_DailyTrading).Msg(fmt.Sprintf("The latest date of stock - %s is %s", element.Symbol, startDate))
 		// Loop for dates
 		for startDate.Before(nowDate) {
 			// Input target year
@@ -78,7 +77,7 @@ func (c *Crawler) DailyTrading(stocks *[]database.StockInfo) ([]*database.DailyT
 			// Data table
 			table, err := (*c.WebDriver).FindElement(selenium.ByID, "report-table")
 			if err != nil {
-				log.Panic(errors.Wrap(err, "FindElement: report-table"))
+				c.LogJob(logging.Get().Panic(), CR_DailyTrading).Err(err)
 				continue
 			}
 			rows, _ := table.FindElements(selenium.ByTagName, "tr")
@@ -104,7 +103,7 @@ func (c *Crawler) DailyTrading(stocks *[]database.StockInfo) ([]*database.DailyT
 						}
 						date, err := time.Parse("2006-01-02", strDate)
 						if err != nil {
-							log.Panic(errors.Wrap(err, "Time parsing fail"))
+							c.LogJob(logging.Get().Panic(), CR_DailyTrading).Err(err)
 							break
 						}
 						trade.Date = date

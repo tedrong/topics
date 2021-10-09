@@ -1,13 +1,12 @@
 package crawler
 
 import (
-	"log"
 	"strings"
 	"time"
 
-	"github.com/pkg/errors"
 	"github.com/tebeka/selenium"
 	"github.com/topics/database"
+	"github.com/topics/logging"
 	"github.com/topics/models"
 )
 
@@ -24,7 +23,7 @@ func StockInfo() {
 		infos := []*database.StockInfo{}
 		tables, err := (*crawler.WebDriver).FindElements(selenium.ByTagName, "table")
 		if err != nil {
-			log.Panic(errors.Wrap(err, "FindElement: can't get any table"))
+			crawler.LogJob(logging.Get().Panic(), CR_StockInfo).Err(err)
 		}
 
 		rows, _ := tables[1].FindElements(selenium.ByTagName, "tr")
@@ -55,7 +54,7 @@ func StockInfo() {
 						}
 						date, err := time.Parse("2006-01-02", strDate)
 						if err != nil {
-							log.Panic(errors.Wrap(err, "Time parsing fail"))
+							crawler.LogJob(logging.Get().Panic(), CR_StockInfo).Err(err)
 						}
 						info.ListingDate = date
 					}

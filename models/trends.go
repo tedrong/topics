@@ -1,15 +1,17 @@
 package models
 
 import (
-	"log"
+	"fmt"
 	"time"
 
 	"github.com/topics/database"
+	"github.com/topics/logging"
 )
 
 type TrendModel struct{}
 
 func (m TrendModel) Store(rank int, title string) {
+	zlog := logging.Get()
 	db := database.GetPG(database.DBTrend)
 	date := time.Now()
 	row := database.Trend{
@@ -20,6 +22,6 @@ func (m TrendModel) Store(rank int, title string) {
 	if db.Model(&row).Where("title = ?", title).Where("date = ?", row.Date).Updates(row).RowsAffected == 0 {
 		db.Create(&row)
 	} else {
-		log.Printf("Title(%s) updated with Rank(%d)", title, rank)
+		zlog.Info().Msg(fmt.Sprintf("Title(%s) updated with Rank(%d)", title, rank))
 	}
 }

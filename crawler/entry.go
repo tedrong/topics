@@ -8,6 +8,7 @@ import (
 	"sync"
 
 	"github.com/pkg/errors"
+	"github.com/rs/zerolog"
 	"github.com/tebeka/selenium"
 	"github.com/tebeka/selenium/firefox"
 	"github.com/topics/sysexec"
@@ -21,6 +22,14 @@ type Crawler struct {
 	Port            int
 	WebDriver       *selenium.WebDriver
 }
+
+var (
+	CR_DailyTrading      = "DailyTrading"
+	CR_DailyTradingRatio = "DailyTradingRatio"
+	CR_Highlight         = "Highlight"
+	CR_StockInfo         = "StockInfo"
+	CR_TAIEX             = "TAIEX"
+)
 
 var c *Crawler
 
@@ -78,6 +87,14 @@ func (c *Crawler) GOTO() {
 	if err := (*c.WebDriver).Get(c.URL); err != nil {
 		log.Panic(errors.Wrap(err, fmt.Sprintf("Connect to %s", c.URL)))
 	}
+}
+
+func (c *Crawler) LogJob(zlog *zerolog.Event, jobName string) *zerolog.Event {
+	zlog.
+		Str("type", "Crawler").
+		Str("server", "Topics").
+		Str("cronjob", jobName)
+	return zlog
 }
 
 func getElenentText(element *selenium.WebElement) string {

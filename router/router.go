@@ -13,6 +13,7 @@ import (
 )
 
 func Init() {
+	// gin.SetMode(gin.ReleaseMode)
 	//Start the default gin server
 	r := gin.Default()
 
@@ -34,9 +35,12 @@ func Init() {
 
 		/*** START AUTH ***/
 		auth := new(controllers.AuthController)
-
 		//Refresh the token when needed to generate new access_token and refresh_token for the user
 		v1.POST("/token/refresh", auth.Refresh)
+
+		/*** START DASHBOARD ***/
+		dashboard := new(controllers.DashboardController)
+		v1.GET("/dashboard/system/info", TokenAuthMiddleware(), dashboard.SystemInfo)
 	}
 
 	r.LoadHTMLGlob("./public/html/*")

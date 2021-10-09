@@ -1,17 +1,17 @@
 package models
 
 import (
-	"log"
 	"sort"
 	"time"
 
-	"github.com/pkg/errors"
 	"github.com/topics/database"
+	"github.com/topics/logging"
 )
 
 type DailyTrading struct{}
 
 func (m DailyTrading) LatestDate(symbol string) time.Time {
+	zlog := logging.Get()
 	db := database.GetPG(database.DBStock)
 	trades := []database.DailyTrading{}
 	result := db.Where("symbol = ?", symbol).Where("trade_volume != ?", 0).Find(&trades)
@@ -19,7 +19,7 @@ func (m DailyTrading) LatestDate(symbol string) time.Time {
 		m := StockInfoModel{}
 		info, err := m.GetBySymbol(symbol)
 		if err != nil {
-			log.Print(errors.Wrap(err, "Getting stock information fail"))
+			zlog.Warn().Err(err)
 		}
 		return info.ListingDate
 	}
@@ -30,13 +30,14 @@ func (m DailyTrading) LatestDate(symbol string) time.Time {
 }
 
 func (m DailyTrading) LatestRatioDate() time.Time {
+	zlog := logging.Get()
 	db := database.GetPG(database.DBStock)
 	trades := []database.DailyTrading{}
 	result := db.Where("dividend_year = ?", "").Find(&trades)
 	if result.RowsAffected == 0 || result.Error != nil {
 		date, err := time.Parse("2006-01-02", "2005-09-02")
 		if err != nil {
-			log.Panic(errors.Wrap(err, "Time parsing fail"))
+			zlog.Panic().Err(err)
 		}
 		return date
 	}

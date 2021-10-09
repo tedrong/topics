@@ -2,12 +2,11 @@ package crontab
 
 import (
 	"context"
-	"log"
 	"strconv"
 	"strings"
 
 	"github.com/groovili/gogtrends"
-	"github.com/pkg/errors"
+	"github.com/topics/logging"
 	"github.com/topics/models"
 )
 
@@ -29,22 +28,22 @@ func (d *DailyTrends) Period() string {
 }
 
 func (d *DailyTrends) Do() {
-	log.Print("Daily trends start")
+	d.LogJob(logging.Get().Info(), CJ_Trends).Msg("Daily trends start")
 	//Enable debug to see request-response
 	// gogtrends.Debug(true)
 	ctx := context.Background()
 	dailySearches, err := gogtrends.Daily(ctx, langEn, locUS)
 	if err != nil {
-		log.Print(errors.Wrap(err, "Google trends - Daily"))
+		d.LogJob(logging.Get().Warn(), CJ_Trends).Err(err)
 		return
 	}
 	for _, element := range dailySearches {
 		count, err := strconv.Atoi(strings.Replace(element.FormattedTraffic, "K+", "000", 1))
 		if err != nil {
-			log.Print(errors.Wrap(err, "Item count replace K+ to 1000 fail"))
+			d.LogJob(logging.Get().Warn(), CJ_Trends).Err(err)
 			return
 		}
 		trendModel.Store(count, element.Title.Query)
 	}
-	log.Print("Daily trends end")
+	d.LogJob(logging.Get().Info(), CJ_Trends).Msg("Daily trends end")
 }

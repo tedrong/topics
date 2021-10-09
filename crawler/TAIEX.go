@@ -2,17 +2,16 @@ package crawler
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/jinzhu/now"
-	"github.com/pkg/errors"
 	"github.com/tebeka/selenium"
 	"github.com/topics/common"
 	"github.com/topics/database"
+	"github.com/topics/logging"
 )
 
 func (c *Crawler) TAIEX(startDate time.Time) ([]*database.TAIEX, error) {
@@ -21,7 +20,7 @@ func (c *Crawler) TAIEX(startDate time.Time) ([]*database.TAIEX, error) {
 	strDate := (time.Now()).Format("2006-01-02")
 	nowDate, err := time.Parse("2006-01-02", strDate)
 	if err != nil {
-		log.Panic(errors.Wrap(err, "Time parsing fail"))
+		c.LogJob(logging.Get().Panic(), CR_TAIEX).Err(err)
 	}
 	searchBtn, _ := (*c.WebDriver).FindElement(selenium.ByXPATH, "//form[@class='main']//a[@class='button search']")
 
@@ -55,7 +54,7 @@ func (c *Crawler) TAIEX(startDate time.Time) ([]*database.TAIEX, error) {
 		// Data table
 		table, err := (*c.WebDriver).FindElement(selenium.ByID, "report-table")
 		if err != nil {
-			log.Panic(errors.Wrap(err, "FindElement: report-table"))
+			c.LogJob(logging.Get().Panic(), CR_TAIEX).Err(err)
 			continue
 		}
 		rows, _ := table.FindElements(selenium.ByTagName, "tr")
@@ -80,7 +79,7 @@ func (c *Crawler) TAIEX(startDate time.Time) ([]*database.TAIEX, error) {
 					}
 					date, err := time.Parse("2006-01-02", strDate)
 					if err != nil {
-						log.Panic(errors.Wrap(err, "Time parsing fail"))
+						c.LogJob(logging.Get().Panic(), CR_TAIEX).Err(err)
 						break
 					}
 					market.Date = date

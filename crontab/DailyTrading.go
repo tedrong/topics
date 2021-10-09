@@ -1,11 +1,11 @@
 package crontab
 
 import (
-	"log"
+	"fmt"
 	"time"
 
-	"github.com/pkg/errors"
 	"github.com/topics/crawler"
+	"github.com/topics/logging"
 	"github.com/topics/models"
 )
 
@@ -32,7 +32,7 @@ func (m *DailyTrading) Do() {
 	// Startup crawler with date(first day of current month)
 	DailyTrading, err := crawler.DailyTrading(stocks)
 	if err != nil {
-		log.Print(errors.Wrap(err, "Get daily trading fail"))
+		m.LogJob(logging.Get().Warn(), CJ_DailyTrading).Err(err)
 	}
 	DailyTradingModel.Store(DailyTrading)
 
@@ -41,12 +41,12 @@ func (m *DailyTrading) Do() {
 	crawler.GOTO()
 	// Find the latest record in database, return 1970-01-01 if empty
 	date := DailyTradingModel.LatestRatioDate()
-	log.Printf("The latest date of daily trading supplement is %s", date)
+	m.LogJob(logging.Get().Info(), CJ_DailyTrading).Msg(fmt.Sprintf("The latest date of daily trading supplement is %s", date))
 
 	time.Sleep(2 * time.Second)
 	DailyTrading, err = crawler.DailyTradingRatio(time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, time.Local))
 	if err != nil {
-		log.Print(errors.Wrap(err, "Get daily trading supplement fail"))
+		m.LogJob(logging.Get().Warn(), CJ_DailyTrading).Err(err)
 	}
 	DailyTradingModel.Store(DailyTrading)
 

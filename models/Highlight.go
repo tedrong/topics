@@ -1,23 +1,23 @@
 package models
 
 import (
-	"log"
 	"time"
 
-	"github.com/pkg/errors"
 	"github.com/topics/database"
+	"github.com/topics/logging"
 )
 
 type Highlight struct{}
 
 func (m Highlight) LatestDate() time.Time {
+	zlog := logging.Get()
 	db := database.GetPG(database.DBStock)
 	row := database.Highlight{}
 	result := db.Last(&row)
 	if result.Error != nil {
 		date, err := time.Parse("2006-01-02", "1970-01-01")
 		if err != nil {
-			log.Panic(errors.Wrap(err, "Time parsing fail"))
+			zlog.Panic().Err(err)
 		}
 		return date
 	}

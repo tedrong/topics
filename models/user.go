@@ -2,11 +2,11 @@ package models
 
 import (
 	"errors"
-	"log"
 	"strings"
 
 	"github.com/topics/database"
 	"github.com/topics/forms"
+	"github.com/topics/logging"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -17,9 +17,10 @@ var authModel = new(AuthModel)
 
 // Login, check database and compare the password
 func (m UserModel) Login(form forms.LoginForm) (user database.User, token Token, err error) {
+	zlog := logging.Get()
 	result := database.GetPG(database.DBContent).Where("email = ?", strings.ToLower(form.Email)).Find(&user)
 	if result.Error != nil {
-		log.Panic(result.Error)
+		zlog.Error().Err(result.Error)
 		return user, token, result.Error
 	}
 

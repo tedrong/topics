@@ -1,11 +1,11 @@
 package crontab
 
 import (
-	"log"
+	"fmt"
 	"time"
 
-	"github.com/pkg/errors"
 	"github.com/topics/crawler"
+	"github.com/topics/logging"
 	"github.com/topics/models"
 )
 
@@ -28,11 +28,11 @@ func (m *Highlight) Do() {
 	time.Sleep(2 * time.Second)
 	// Find the latest record in database, return 1970-01-01 if empty
 	date := HighlightModel.LatestDate()
-	log.Printf("The latest date of Highlight is %s", date)
+	m.LogJob(logging.Get().Info(), CJ_Highlight).Msg(fmt.Sprintf("The latest date of Highlight is %s", date))
 	// Startup crawler with date(first day of current month)
 	Highlight, err := crawler.Highlight(time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.Local))
 	if err != nil {
-		log.Print(errors.Wrap(err, "Get highlight fail"))
+		m.LogJob(logging.Get().Warn(), CJ_Highlight).Err(err)
 	}
 	HighlightModel.Store(Highlight)
 	crawler.Mutex.Unlock()

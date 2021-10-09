@@ -2,10 +2,10 @@ package database
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/go-redis/redis/v8"
+	"github.com/topics/logging"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -75,26 +75,28 @@ func Init(selectDB ...int) {
 
 // Connect create the connection to postgresql and setting up gorm
 func ConnectDB(dsn string) *gorm.DB {
+	zlog := logging.Get()
 	conn, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Panic(err)
+		zlog.Panic().Err(err)
 		return nil
 	}
 	return conn
 }
 
 func migration(flag DBFlag) {
+	zlog := logging.Get()
 	switch flag {
 	case DBStock:
 		// DBSet[flag].Debug().AutoMigrate(&StockInfo{}, &TAIEX{}, &DailyTrading{})
 		DBSet[flag].AutoMigrate(&StockInfo{}, &TAIEX{}, &DailyTrading{}, &Highlight{})
-		log.Print("Table migrate successfully in DB:stock")
+		zlog.Debug().Msg("Table migrate successfully in DB:stock")
 	case DBTrend:
 		DBSet[flag].AutoMigrate(&Trend{})
-		log.Print("Table migrate successfully in DB:googleTrends")
+		zlog.Debug().Msg("Table migrate successfully in DB:googleTrends")
 	case DBContent:
 		DBSet[flag].AutoMigrate(&User{})
-		log.Print("Table migrate successfully in DB:content")
+		zlog.Debug().Msg("Table migrate successfully in DB:content")
 	}
 }
 
