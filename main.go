@@ -45,16 +45,16 @@ func main() {
 	seleniumService, c := crawler.StartWebInstance()
 	crawler.StockInfo()
 
-	// TAIEXCron := crontab.TAIEX{BasicCron: crontab.BasicCron{}}
+	TAIEXCron := crontab.TAIEX{BasicCron: crontab.BasicCron{}}
 	DailyTrading := crontab.DailyTrading{BasicCron: crontab.BasicCron{}}
-	// Highlight := crontab.Highlight{BasicCron: crontab.BasicCron{}}
-	// trendsCron := crontab.DailyTrends{BasicCron: crontab.BasicCron{}}
+	Highlight := crontab.Highlight{BasicCron: crontab.BasicCron{}}
+	trendsCron := crontab.DailyTrends{BasicCron: crontab.BasicCron{}}
 
 	routine := cron.New()
-	// routine.AddFunc(TAIEXCron.Period(), TAIEXCron.Do)
-	// routine.AddFunc(trendsCron.Period(), trendsCron.Do)
+	routine.AddFunc(TAIEXCron.Period(), TAIEXCron.Do)
+	routine.AddFunc(trendsCron.Period(), trendsCron.Do)
 	routine.AddFunc(DailyTrading.Period(), DailyTrading.Do)
-	// routine.AddFunc(Highlight.Period(), Highlight.Do)
+	routine.AddFunc(Highlight.Period(), Highlight.Do)
 	routine.Start()
 
 	// Stop crawler and web driver
