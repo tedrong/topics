@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	cloud.google.com/go v0.41.0
+	github.com/StackExchange/wmi v1.2.1 // indirect
 	github.com/gin-contrib/gzip v0.0.3
 	github.com/gin-gonic/gin v1.7.4
 	github.com/go-playground/validator/v10 v10.9.0
@@ -19,11 +20,12 @@ require (
 	github.com/mattn/go-isatty v0.0.13 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/robfig/cron/v3 v3.0.1
-	github.com/rs/zerolog v1.25.0 // indirect
+	github.com/rs/zerolog v1.25.0
 	github.com/satori/go.uuid v1.2.0
-	github.com/shirou/gopsutil/v3 v3.21.8
+	github.com/shirou/gopsutil v3.21.9+incompatible
 	github.com/stretchr/testify v1.7.0
 	github.com/tebeka/selenium v0.9.9
+	github.com/tklauser/go-sysconf v0.3.9 // indirect
 	github.com/ugorji/go v1.2.6 // indirect
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5
 	golang.org/x/sys v0.0.0-20210817190340-bfb29a6856f2 // indirect

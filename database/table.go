@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// DB: stock
 type StockInfo struct {
 	gorm.Model
 	Symbol      string    `gorm:"type:text"`
@@ -53,11 +54,7 @@ type Highlight struct {
 	Change      float64   `gorm:"default:0"`
 }
 
-type IndividualStockTrading struct {
-	gorm.Model
-	Date time.Time `gorm:"type:timestamp;default:'1970-01-01 0:00AM'"`
-}
-
+// DB: googleTrends
 // Trends table have every day's google search trends in Taiwan
 type Trend struct {
 	gorm.Model
@@ -67,11 +64,26 @@ type Trend struct {
 	// Daily postgres.Jsonb `gorm:"type:jsonb;default:'{}'"`
 }
 
-// Content
+// DB: content
 type User struct {
 	gorm.Model
 	UUID     string
 	Name     string `db:"name" json:"name"`
 	Email    string `db:"email" json:"email"`
 	Password string `db:"password" json:"-"`
+}
+
+// DB: internal
+// System Informations
+type Consumption struct {
+	gorm.Model
+	CPU    string `db:"cpu" json:"cpu"`
+	Memory string `db:"memory" json:"memory"`
+	Disk   string `db:"disk" json:"disk"`
+}
+
+type Client struct {
+	gorm.Model
+	Type         string `db:"type" json:"type"`
+	LoginCounter int64  `db:"login_counter" json:"login_counter"`
 }

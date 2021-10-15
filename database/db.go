@@ -17,6 +17,7 @@ const (
 	DBStock DBFlag = iota
 	DBTrend
 	DBContent
+	DBInternal
 )
 
 type DB struct {
@@ -24,7 +25,7 @@ type DB struct {
 	dsn  string
 }
 
-var DBSet [3]*gorm.DB
+var DBSet [4]*gorm.DB
 var RedisClient *redis.Client
 
 // Init ...
@@ -45,6 +46,11 @@ func Init(selectDB ...int) {
 			os.Getenv("DB_USER"),
 			os.Getenv("DB_PASS"),
 			os.Getenv("DB_NAME_CONTENT"))},
+		{flag: DBInternal, dsn: fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable TimeZone=UTC",
+			os.Getenv("DB_HOST"),
+			os.Getenv("DB_USER"),
+			os.Getenv("DB_PASS"),
+			os.Getenv("DB_NAME_INTERNAL"))},
 	}
 	for _, element := range dbDSN {
 		conn := ConnectDB(element.dsn)
@@ -97,6 +103,20 @@ func migration(flag DBFlag) {
 	case DBContent:
 		DBSet[flag].AutoMigrate(&User{})
 		zlog.Debug().Msg("Table migrate successfully in DB:content")
+	case DBInternal:
+		DBSet[flag].AutoMigrate(&Consumption{}, &Client{})
+		// Create initial data for loging client type counter
+		for _, element := range ClientIndex() {
+			client := Client{
+				Type:         element,
+				LoginCounter: 0,
+			}
+			result := DBSet[flag].Where("type = ?", element).Find(&client)
+			if result.RowsAffected == 0 || result.Error != nil {
+				DBSet[flag].Create(&client)
+			}
+		}
+		zlog.Debug().Msg("Table migrate successfully in DB:internal")
 	}
 }
 

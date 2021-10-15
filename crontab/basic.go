@@ -9,6 +9,7 @@ var (
 	CJ_DailyTrading = "StockDailyTrading"
 	CJ_Highlight    = "Highlight"
 	CJ_TAIEX        = "TAIEX"
+	CJ_Internal     = "Internal"
 )
 
 type BasicCron struct{}

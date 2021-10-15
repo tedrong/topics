@@ -37,6 +37,13 @@ func (ctrl UserController) Login(c *gin.Context) {
 		return
 	}
 
+	header := c.Request.Header["User-Agent"]
+	err = dashboardModel.ClientTypeStore(header[0])
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": "internal error"})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{"message": "Successfully logged in", "user": user, "token": token})
 }
 

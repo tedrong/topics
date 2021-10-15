@@ -46,15 +46,17 @@ func main() {
 	crawler.StockInfo()
 
 	TAIEXCron := crontab.TAIEX{BasicCron: crontab.BasicCron{}}
-	DailyTrading := crontab.DailyTrading{BasicCron: crontab.BasicCron{}}
-	Highlight := crontab.Highlight{BasicCron: crontab.BasicCron{}}
+	dailyTradingCron := crontab.DailyTrading{BasicCron: crontab.BasicCron{}}
+	highlightCron := crontab.Highlight{BasicCron: crontab.BasicCron{}}
 	trendsCron := crontab.DailyTrends{BasicCron: crontab.BasicCron{}}
+	internalCron := crontab.Internal{BasicCron: crontab.BasicCron{}}
 
 	routine := cron.New()
 	routine.AddFunc(TAIEXCron.Period(), TAIEXCron.Do)
 	routine.AddFunc(trendsCron.Period(), trendsCron.Do)
-	routine.AddFunc(DailyTrading.Period(), DailyTrading.Do)
-	routine.AddFunc(Highlight.Period(), Highlight.Do)
+	routine.AddFunc(dailyTradingCron.Period(), dailyTradingCron.Do)
+	routine.AddFunc(highlightCron.Period(), highlightCron.Do)
+	routine.AddFunc(internalCron.Period(), internalCron.Do)
 	routine.Start()
 
 	// Stop crawler and web driver
