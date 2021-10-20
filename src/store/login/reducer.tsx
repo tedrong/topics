@@ -26,14 +26,14 @@ export default (state = initialState, action: LoginActions) => {
       return {
         ...state,
         pending: false,
-        tokens: action.payload.tokens,
+        tokens: action.payload.data,
         error: null,
       };
     case FETCH_LOGIN_FAILURE:
       return {
         ...state,
         pending: false,
-        login: [],
+        tokens: {},
         error: action.payload.error,
       };
     default:

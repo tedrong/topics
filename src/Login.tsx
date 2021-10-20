@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   // getPendingSelector,
   getLoginSelector,
-  // getErrorSelector,
+  getErrorSelector,
 } from "./store/login/selectors";
 import { fetchLoginRequest } from "./store/login/actions";
 
@@ -52,9 +52,9 @@ export default function LoginBox() {
   const dispatch = useDispatch();
   // const pending = useSelector(getPendingSelector);
   const login = useSelector(getLoginSelector);
-  // const error = useSelector(getErrorSelector);
+  const error = useSelector(getErrorSelector);
 
-  if (login.access_token !== "") {
+  if (error === null && login.access_token !== "") {
     return <Redirect to="/home/welcome" />;
   }
 
@@ -78,8 +78,7 @@ export default function LoginBox() {
               password: Yup.string().max(255).required("Password is required"),
             })}
             onSubmit={(values, { setSubmitting }) => {
-              console.log(values);
-              dispatch(fetchLoginRequest());
+              dispatch(fetchLoginRequest(values));
               setSubmitting(false);
             }}
           >
@@ -152,11 +151,7 @@ export default function LoginBox() {
                 </Box>
                 <Typography color="textSecondary" variant="body1">
                   Don&apos;t have an account?{" "}
-                  <Link
-                    component={RouterLink}
-                    to="/register"
-                    underline="hover"
-                  >
+                  <Link component={RouterLink} to="/register" underline="hover">
                     Sign up
                   </Link>
                 </Typography>

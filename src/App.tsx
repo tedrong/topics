@@ -3,6 +3,7 @@ import { ThemeProvider } from "@mui/material/styles";
 
 import theme from "./theme";
 import mockup from "./store/mockData";
+import init from "./store/api";
 
 import Login from "./Login";
 import Register from "./route/Register";
@@ -11,6 +12,8 @@ import Frame from "./route/Frame";
 export default function App() {
   if ("demo" === process.env.REACT_APP_STAGE) {
     mockup();
+  } else {
+    init();
   }
   return (
     <ThemeProvider theme={theme}>

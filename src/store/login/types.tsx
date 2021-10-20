@@ -15,8 +15,12 @@ export interface LoginState {
   error: string | null;
 }
 
+export interface FetchLoginRequestPayload {
+  email: string;
+  password: string;
+}
 export interface FetchLoginSuccessPayload {
-  tokens: ITokens;
+  data: ITokens;
 }
 
 export interface FetchLoginFailurePayload {
@@ -25,6 +29,7 @@ export interface FetchLoginFailurePayload {
 
 export interface FetchLoginRequest {
   type: typeof FETCH_LOGIN_REQUEST;
+  payload: FetchLoginRequestPayload;
 }
 
 export type FetchLoginSuccess = {

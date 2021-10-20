@@ -1,9 +1,10 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
+import { API } from "./api";
 
 export default function mockup() {
   var mock = new MockAdapter(axios, { delayResponse: 2000 });
-  mock.onGet("/test").reply(200, {
+  mock.onPost(API.user.login).reply(200, {
     message: "Successfully logged in",
     token: {
       access_token:
@@ -20,5 +21,20 @@ export default function mockup() {
       name: "testing",
       email: "test@test.com",
     },
+  });
+  mock.onGet(API.dashboard.info).reply(200, {
+    cpu: "45.69",
+    memory: "75.84",
+    disk: "15.54",
+    bootTime: 12312373,
+  });
+  mock.onGet(new RegExp(`${API.dashboard.infoHistory}/*`)).reply(200, {
+    cpu: ["42.23", "53.28"],
+    memory: ["65.38", "76.03"],
+    disk: ["15.52", "15.54"],
+    label: [
+      "2021-10-17 09:20:49.329041 +0800 CST",
+      "2021-10-18 09:31:56.641926 +0800 CST",
+    ],
   });
 }
