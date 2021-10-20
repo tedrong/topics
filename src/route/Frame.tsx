@@ -2,6 +2,7 @@ import React, { Suspense, useState, useEffect } from "react";
 import {
   Link,
   matchPath,
+  Redirect,
   Router,
   Route,
   Switch,
@@ -31,6 +32,8 @@ import { FaBell, FaSignOutAlt, FaBars, FaUser } from "react-icons/fa";
 import { BsPieChartFill, BsXSquareFill } from "react-icons/bs";
 import logo from "../material/leave.png";
 import theme from "../theme";
+
+import { getLoginSelector } from "../store/login/selectors";
 
 import Pending from "../components/Pending";
 import NotFound from "../components/NotFound";
@@ -82,22 +85,28 @@ interface menuItem {
 }
 
 export default function Frame() {
+  const login = useSelector(getLoginSelector);
   const [MobileMode, setMobileMode] = useState(false);
-  return (
-    <LayoutRoot>
-      <IconContext.Provider value={{ style: { marginRight: "10px" } }}>
-        <NavBar mobile={MobileMode} setMobile={setMobileMode} />
-        <SideMenu mobile={MobileMode} setMobile={setMobileMode} />
-      </IconContext.Provider>
-      <LayoutWrapper>
-        <LayoutContainer>
-          <LayoutContent>
-            <PrivateRouting />
-          </LayoutContent>
-        </LayoutContainer>
-      </LayoutWrapper>
-    </LayoutRoot>
-  );
+
+  if (login.access_token !== "") {
+    return (
+      <LayoutRoot>
+        <IconContext.Provider value={{ style: { marginRight: "10px" } }}>
+          <NavBar mobile={MobileMode} setMobile={setMobileMode} />
+          <SideMenu mobile={MobileMode} setMobile={setMobileMode} />
+        </IconContext.Provider>
+        <LayoutWrapper>
+          <LayoutContainer>
+            <LayoutContent>
+              <PrivateRouting />
+            </LayoutContent>
+          </LayoutContainer>
+        </LayoutWrapper>
+      </LayoutRoot>
+    );
+  } else {
+    return <Redirect to="/login" />;
+  }
 }
 
 function NavBar(status: menuStatus) {
