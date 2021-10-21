@@ -4,16 +4,23 @@ import { all, call, put, takeLatest } from "redux-saga/effects";
 import { API } from "../api";
 import { fetchLoginFailure, fetchLoginSuccess } from "./actions";
 import { FETCH_LOGIN_REQUEST } from "./actionTypes";
-import { FetchLoginRequest, FetchLoginRequestPayload, ITokens } from "./types";
+import {
+  FetchLoginRequest,
+  FetchLoginRequestPayload,
+  LoginPayload,
+} from "./types";
 
 const postLogin = (payload: FetchLoginRequestPayload) =>
-  axios.post<ITokens>(API.user.login, payload);
+  axios.post<LoginPayload>(API.user.login, payload);
 /*
   Worker Saga: Fired on FETCH_LOGIN_REQUEST action
 */
 function* fetchLoginSaga(req: FetchLoginRequest) {
   try {
-    const response: AxiosResponse<ITokens> = yield call(postLogin, req.payload);
+    const response: AxiosResponse<LoginPayload> = yield call(
+      postLogin,
+      req.payload
+    );
     yield put(
       fetchLoginSuccess({
         data: response.data,

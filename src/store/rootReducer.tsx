@@ -1,11 +1,11 @@
 import { AnyAction, combineReducers, Reducer } from "redux";
 
 import todoReducer from "./todo/reducer";
-import loginReducer from "./login/reducer";
+import userReducer from "./user/reducer";
 
 const combinedReducer = combineReducers({
   todo: todoReducer,
-  login: loginReducer,
+  user: userReducer,
 });
 
 const rootReducer: Reducer = (state: AppState, action: AnyAction) => {

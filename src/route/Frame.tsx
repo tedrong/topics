@@ -33,7 +33,7 @@ import { BsPieChartFill, BsXSquareFill } from "react-icons/bs";
 import logo from "../material/leave.png";
 import theme from "../theme";
 
-import { getLoginSelector } from "../store/login/selectors";
+import { getLoginSelector } from "../store/user/selectors";
 
 import Pending from "../components/Pending";
 import NotFound from "../components/NotFound";
@@ -88,7 +88,7 @@ export default function Frame() {
   const login = useSelector(getLoginSelector);
   const [MobileMode, setMobileMode] = useState(false);
 
-  if (login.access_token !== "") {
+  if (login.token.access_token !== "") {
     return (
       <LayoutRoot>
         <IconContext.Provider value={{ style: { marginRight: "10px" } }}>

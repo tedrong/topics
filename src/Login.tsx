@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   // getPendingSelector,
   getLoginSelector,
-  getErrorSelector,
-} from "./store/login/selectors";
-import { fetchLoginRequest } from "./store/login/actions";
+  getLoginErrorSelector,
+} from "./store/user/selectors";
+import { fetchLoginRequest } from "./store/user/actions";
 
 import * as Yup from "yup";
 import { Formik } from "formik";
@@ -52,9 +52,9 @@ export default function LoginBox() {
   const dispatch = useDispatch();
   // const pending = useSelector(getPendingSelector);
   const login = useSelector(getLoginSelector);
-  const error = useSelector(getErrorSelector);
+  const error = useSelector(getLoginErrorSelector);
 
-  if (error === null && login.access_token !== "") {
+  if (error === null && login.token.access_token !== "") {
     return <Redirect to="/home/welcome" />;
   }
 

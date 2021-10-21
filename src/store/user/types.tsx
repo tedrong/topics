@@ -4,15 +4,27 @@ import {
   FETCH_LOGIN_FAILURE,
 } from "./actionTypes";
 
-export interface ITokens {
+export interface Token {
   access_token: string;
   refresh_token: string;
 }
 
-export interface LoginState {
+export interface User {
+  ID: number;
+  UUID: string;
+  name: string;
+}
+
+export interface LoginPayload {
   pending: boolean;
-  tokens: ITokens;
+  message: string;
+  token: Token;
+  user: User;
   error: string | null;
+}
+
+export interface UserState {
+  login: LoginPayload;
 }
 
 export interface FetchLoginRequestPayload {
@@ -20,7 +32,7 @@ export interface FetchLoginRequestPayload {
   password: string;
 }
 export interface FetchLoginSuccessPayload {
-  data: ITokens;
+  data: LoginPayload;
 }
 
 export interface FetchLoginFailurePayload {
@@ -42,7 +54,7 @@ export type FetchLoginFailure = {
   payload: FetchLoginFailurePayload;
 };
 
-export type LoginActions =
+export type UserActions =
   | FetchLoginRequest
   | FetchLoginSuccess
   | FetchLoginFailure;
