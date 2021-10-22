@@ -1,5 +1,4 @@
-import { ChangeEventHandler, useState } from "react";
-import styled from "styled-components";
+import { useState } from "react";
 import { Helmet } from "react-helmet";
 import moment from "moment";
 import {
@@ -16,22 +15,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-
-const Content = styled.div`
-  text-align: center;
-  margin-top: 20%;
-`;
-
-const MainTitle = styled.div`
-  color: #a9dfbf;
-  font-size: 8vh;
-`;
-
-const SubTitle = styled.div`
-  color: #145a32;
-  font-size: 6vh;
-  font-weight: bold;
-`;
 
 export default function Account() {
   return (
@@ -135,7 +118,7 @@ function AccountProfileDetails() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValues({
       ...values,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 

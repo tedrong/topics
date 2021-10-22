@@ -23,7 +23,7 @@ const initialState: UserState = {
   },
 };
 
-export default (state = initialState, action: UserActions) => {
+const reducer = (state = initialState, action: UserActions) => {
   switch (action.type) {
     case FETCH_LOGIN_REQUEST:
       return {
@@ -55,3 +55,4 @@ export default (state = initialState, action: UserActions) => {
       };
   }
 };
+export default reducer;

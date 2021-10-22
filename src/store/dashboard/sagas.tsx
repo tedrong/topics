@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { all, call, put, select, takeLatest } from "redux-saga/effects";
+import { all, call, put, takeLatest } from "redux-saga/effects";
 
 import { API } from "../api";
 import {

@@ -10,7 +10,7 @@ import {
   colors,
   useTheme,
 } from "@mui/material";
-import { BsLaptop, BsTablet, BsPhone } from "react-icons/bs";
+import { BsLaptop, BsPhone } from "react-icons/bs";
 // import LaptopMacIcon from '@material-ui/icons/LaptopMac';
 // import PhoneIcon from '@material-ui/icons/Phone';
 // import TabletIcon from '@material-ui/icons/Tablet';

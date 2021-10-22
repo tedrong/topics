@@ -1,7 +1,4 @@
 import axios from "axios";
-import { select } from "redux-saga/effects";
-import { getLoginSelector } from "./user/selectors";
-import { LoginPayload } from "./user/types";
 
 export default function init() {
   axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;

@@ -38,7 +38,7 @@ const initialState: DashboardState = {
   },
 };
 
-export default (state = initialState, action: DashboardActions) => {
+const reducer = (state = initialState, action: DashboardActions) => {
   switch (action.type) {
     case FETCH_INFO_REQUEST:
       return {
@@ -146,3 +146,4 @@ export default (state = initialState, action: DashboardActions) => {
       };
   }
 };
+export default reducer;
