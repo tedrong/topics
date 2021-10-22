@@ -97,19 +97,33 @@ func (m DashboardModel) SystemInfo() (*forms.SystemInfo, error) {
 	return &info, nil
 }
 
-func (m DashboardModel) SystemInfoHistory(timestamp time.Time) (map[string][]string, error) {
+func (m DashboardModel) SystemInfoHistory(timestamp time.Time) (map[string][]int, error) {
 	db := database.GetPG(database.DBInternal)
 	consumptions := []database.Consumption{}
 	result := db.Where("created_at > ?", timestamp).Order("created_at").Find(&consumptions)
 	if result.Error != nil {
 		return nil, result.Error
 	}
-	content := map[string][]string{}
+	content := map[string][]int{}
 	for _, consumption := range consumptions {
-		content["cpu"] = append(content["cpu"], consumption.CPU)
-		content["memory"] = append(content["memory"], consumption.Memory)
-		content["disk"] = append(content["disk"], consumption.Disk)
-		content["label"] = append(content["label"], strconv.Itoa(int(consumption.CreatedAt.Unix())))
+		i, err := strconv.ParseFloat(consumption.CPU, 64)
+		if err != nil {
+			return nil, err
+		}
+		content["cpu"] = append(content["cpu"], int(i))
+
+		i, err = strconv.ParseFloat(consumption.Memory, 64)
+		if err != nil {
+			return nil, err
+		}
+		content["memory"] = append(content["memory"], int(i))
+
+		i, err = strconv.ParseFloat(consumption.Disk, 64)
+		if err != nil {
+			return nil, err
+		}
+		content["disk"] = append(content["disk"], int(i))
+		content["label"] = append(content["label"], int(consumption.CreatedAt.Unix()))
 	}
 	return content, nil
 }
