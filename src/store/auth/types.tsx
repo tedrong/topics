@@ -12,7 +12,8 @@ export interface Token {
 export interface User {
   ID: number;
   UUID: string;
-  name: string;
+  first_name: string;
+  last_name: string;
 }
 
 export interface LoginPayload {
@@ -23,7 +24,7 @@ export interface LoginPayload {
   error: string | null;
 }
 
-export interface UserState {
+export interface AuthState {
   login: LoginPayload;
 }
 
@@ -54,7 +55,7 @@ export type FetchLoginFailure = {
   payload: FetchLoginFailurePayload;
 };
 
-export type UserActions =
+export type AuthActions =
   | FetchLoginRequest
   | FetchLoginSuccess
   | FetchLoginFailure;

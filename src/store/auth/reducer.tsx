@@ -4,9 +4,9 @@ import {
   FETCH_LOGIN_FAILURE,
 } from "./actionTypes";
 
-import { UserActions, UserState } from "./types";
+import { AuthActions, AuthState } from "./types";
 
-const initialState: UserState = {
+const initialState: AuthState = {
   login: {
     pending: false,
     message: "",
@@ -17,13 +17,14 @@ const initialState: UserState = {
     user: {
       ID: -1,
       UUID: "",
-      name: "",
+      first_name: "",
+      last_name: "",
     },
     error: null,
   },
 };
 
-const reducer = (state = initialState, action: UserActions) => {
+const reducer = (state = initialState, action: AuthActions) => {
   switch (action.type) {
     case FETCH_LOGIN_REQUEST:
       return {

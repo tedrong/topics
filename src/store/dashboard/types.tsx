@@ -1,4 +1,3 @@
-import { FETCH_LOGIN_FAILURE } from "../user/actionTypes";
 import {
   FETCH_INFO_REQUEST,
   FETCH_INFO_SUCCESS,

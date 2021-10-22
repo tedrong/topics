@@ -6,8 +6,8 @@ import {
   // getPendingSelector,
   getLoginSelector,
   getLoginErrorSelector,
-} from "./store/user/selectors";
-import { fetchLoginRequest } from "./store/user/actions";
+} from "./store/auth/selectors";
+import { fetchLoginRequest } from "./store/auth/actions";
 
 import * as Yup from "yup";
 import { Formik } from "formik";

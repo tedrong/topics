@@ -73,12 +73,6 @@ function AccountProfile() {
           <Typography color="textPrimary" gutterBottom variant="h3">
             {user.name}
           </Typography>
-          <Typography color="textSecondary" variant="body1">
-            {`${user.city} ${user.country}`}
-          </Typography>
-          <Typography color="textSecondary" variant="body1">
-            {`${moment().format("hh:mm A")} ${user.timezone}`}
-          </Typography>
         </Box>
       </CardContent>
       <Divider />
@@ -92,20 +86,6 @@ function AccountProfile() {
 }
 
 function AccountProfileDetails() {
-  const states = [
-    {
-      value: "alabama",
-      label: "Alabama",
-    },
-    {
-      value: "new-york",
-      label: "New York",
-    },
-    {
-      value: "san-francisco",
-      label: "San Francisco",
-    },
-  ];
   const [values, setValues] = useState({
     firstName: "Katarina",
     lastName: "Smith",
@@ -162,47 +142,6 @@ function AccountProfileDetails() {
                 value={values.email}
                 variant="outlined"
               />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Phone Number"
-                name="phone"
-                onChange={handleChange}
-                type="number"
-                value={values.phone}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Country"
-                name="country"
-                onChange={handleChange}
-                required
-                value={values.country}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Select State"
-                name="state"
-                onChange={handleChange}
-                required
-                select
-                SelectProps={{ native: true }}
-                value={values.state}
-                variant="outlined"
-              >
-                {states.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
             </Grid>
           </Grid>
         </CardContent>

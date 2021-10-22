@@ -33,7 +33,7 @@ import { BsPieChartFill, BsXSquareFill } from "react-icons/bs";
 import logo from "../material/leave.png";
 import theme from "../theme";
 
-import { getLoginSelector } from "../store/user/selectors";
+import { getLoginSelector } from "../store/auth/selectors";
 
 import Pending from "../components/Pending";
 import NotFound from "../components/NotFound";
