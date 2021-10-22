@@ -15,6 +15,8 @@ import {
   Tooltip,
 } from "@mui/material";
 
+import { Log } from "../store/dashboard/types";
+
 const orders = [
   {
     id: 1,
@@ -77,8 +79,11 @@ const orders = [
     status: "delivered",
   },
 ];
+interface Prop {
+  list: Log[];
+}
 
-export default function LatestOrders() {
+export default function LatestOrders(prop: Prop) {
   return (
     <Card>
       <CardHeader title="Latest Logs" />
@@ -87,29 +92,26 @@ export default function LatestOrders() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Order Ref</TableCell>
-              <TableCell>Customer</TableCell>
-              <TableCell sortDirection="desc">
+              <TableCell>Date</TableCell>
+              <TableCell>Message</TableCell>
+              {/* <TableCell sortDirection="desc">
                 <Tooltip enterDelay={300} title="Sort">
                   <TableSortLabel active direction="desc">
                     Date
                   </TableSortLabel>
                 </Tooltip>
-              </TableCell>
-              <TableCell>Status</TableCell>
+              </TableCell> */}
+              <TableCell>Level</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {orders.map((order) => (
-              <TableRow hover key={order.id}>
-                <TableCell>{order.ref}</TableCell>
-                <TableCell>{order.customer.name}</TableCell>
+            {prop.list.map((log, index) => (
+              <TableRow hover key={index}>
                 <TableCell>
-                  {moment(order.createdAt).format("DD/MM/YYYY")}
+                  {moment(log.time * 1000).format("YYYY/MM/DD")}
                 </TableCell>
-                <TableCell>
-                  <Chip color="primary" label={order.status} size="small" />
-                </TableCell>
+                <TableCell>{log.message}</TableCell>
+                <TableCell>{levelTag(log.level)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -124,7 +126,7 @@ export default function LatestOrders() {
       >
         <Button
           color="primary"
-        //   endIcon={<ArrowRightIcon />}
+          //   endIcon={<ArrowRightIcon />}
           size="small"
           variant="text"
         >
@@ -133,4 +135,17 @@ export default function LatestOrders() {
       </Box>
     </Card>
   );
+}
+
+function levelTag(level: string) {
+  switch (level) {
+    case "info":
+      return <Chip color="info" label={"Info"} size="small" />;
+    case "warning":
+      return <Chip color="warning" label={"Warn"} size="small" />;
+    case "error":
+      return <Chip color="error" label={"Error"} size="small" />;
+    default:
+      return <Chip color="primary" label={"Default"} size="small" />;
+  }
 }

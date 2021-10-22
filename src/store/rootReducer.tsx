@@ -2,10 +2,12 @@ import { AnyAction, combineReducers, Reducer } from "redux";
 
 import todoReducer from "./todo/reducer";
 import userReducer from "./user/reducer";
+import dashboardReducer from "./dashboard/reducer";
 
 const combinedReducer = combineReducers({
   todo: todoReducer,
   user: userReducer,
+  dashboard: dashboardReducer,
 });
 
 const rootReducer: Reducer = (state: AppState, action: AnyAction) => {

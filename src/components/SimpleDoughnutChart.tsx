@@ -15,24 +15,25 @@ import { BsLaptop, BsTablet, BsPhone } from "react-icons/bs";
 // import PhoneIcon from '@material-ui/icons/Phone';
 // import TabletIcon from '@material-ui/icons/Tablet';
 
-export default function SimpleDoughnutChart() {
+interface Prop {
+  desktop: number;
+  mobile: number;
+}
+
+export default function SimpleDoughnutChart(prop: Prop) {
   const theme = useTheme();
 
   const data = {
     datasets: [
       {
-        data: [63, 15, 22],
-        backgroundColor: [
-          colors.indigo[500],
-          colors.red[600],
-          colors.orange[600],
-        ],
+        data: [prop.desktop, prop.mobile],
+        backgroundColor: [colors.indigo[500], colors.orange[600]],
         borderWidth: 8,
         borderColor: colors.common.white,
         hoverBorderColor: colors.common.white,
       },
     ],
-    labels: ["Desktop", "Tablet", "Mobile"],
+    labels: ["Desktop", "Mobile"],
   };
 
   const options: ChartOptions = {
@@ -62,19 +63,13 @@ export default function SimpleDoughnutChart() {
   const devices = [
     {
       title: "Desktop",
-      value: 63,
+      value: prop.desktop,
       icon: BsLaptop,
       color: colors.indigo[500],
     },
     {
-      title: "Tablet",
-      value: 15,
-      icon: BsTablet,
-      color: colors.red[600],
-    },
-    {
       title: "Mobile",
-      value: 23,
+      value: prop.mobile,
       icon: BsPhone,
       color: colors.orange[600],
     },

@@ -1,3 +1,4 @@
+import moment from "moment";
 import { Bar } from "react-chartjs-2";
 import { ChartOptions } from "chart.js";
 import {
@@ -12,9 +13,20 @@ import {
 } from "@mui/material";
 import { BsFillCaretDownFill, BsFillCaretRightFill } from "react-icons/bs";
 
-export default function SimpleBarChart() {
-  const theme = useTheme();
+interface Prop {
+  label: number[];
+  cpu: number[];
+  memory: number[];
+  disk: number[];
+}
 
+export default function SimpleBarChart(prop: Prop) {
+  const theme = useTheme();
+  let label: string[] = [];
+  prop.label.map((date) => {
+    label.push(moment(date * 1000).format("MM/DD"));
+  });
+  
   const data = {
     datasets: [
       {
@@ -23,8 +35,8 @@ export default function SimpleBarChart() {
         barThickness: 12,
         borderRadius: 4,
         categoryPercentage: 0.5,
-        data: [18, 5, 19, 27, 29, 19, 20],
-        label: "This year",
+        data: prop.cpu,
+        label: "cpu",
         maxBarThickness: 10,
       },
       {
@@ -33,12 +45,22 @@ export default function SimpleBarChart() {
         barThickness: 12,
         borderRadius: 4,
         categoryPercentage: 0.5,
-        data: [11, 20, 12, 29, 30, 25, 13],
-        label: "Last year",
+        data: prop.memory,
+        label: "memory",
+        maxBarThickness: 10,
+      },
+      {
+        backgroundColor: colors.blue[200],
+        barPercentage: 0.5,
+        barThickness: 12,
+        borderRadius: 4,
+        categoryPercentage: 0.5,
+        data: prop.disk,
+        label: "disk",
         maxBarThickness: 10,
       },
     ],
-    labels: ["1 Aug", "2 Aug", "3 Aug", "4 Aug", "5 Aug", "6 Aug"],
+    labels: label,
   };
 
   const options: ChartOptions = {
@@ -98,7 +120,7 @@ export default function SimpleBarChart() {
             Last 7 days
           </Button>
         }
-        title="API Fetch Count"
+        title="Consumption History"
       />
       <Divider />
       <CardContent>

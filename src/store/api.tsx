@@ -1,10 +1,18 @@
 import axios from "axios";
-import https from "https";
-import fs from "fs";
+import { select } from "redux-saga/effects";
+import { getLoginSelector } from "./user/selectors";
+import { LoginPayload } from "./user/types";
 
 export default function init() {
   axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
-  // axios.defaults.headers.post["Content-Type"] = "application/json";
+}
+
+export function attachAuthToken(token: string) {
+  if (token) {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+  } else {
+    axios.defaults.headers.common["Authorization"] = null;
+  }
 }
 
 const Version = "v1";

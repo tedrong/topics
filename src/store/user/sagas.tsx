@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { all, call, put, takeLatest } from "redux-saga/effects";
 
-import { API } from "../api";
+import { API, attachAuthToken } from "../api";
 import { fetchLoginFailure, fetchLoginSuccess } from "./actions";
 import { FETCH_LOGIN_REQUEST } from "./actionTypes";
 import {
@@ -26,6 +26,7 @@ function* fetchLoginSaga(req: FetchLoginRequest) {
         data: response.data,
       })
     );
+    attachAuthToken(response.data.token.access_token);
   } catch (e) {
     if (axios.isAxiosError(e)) {
       yield put(
