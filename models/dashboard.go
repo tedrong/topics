@@ -7,6 +7,7 @@ import (
 	"math"
 	"os"
 	"regexp"
+	"strconv"
 	"time"
 
 	"github.com/shirou/gopsutil/cpu"
@@ -108,7 +109,7 @@ func (m DashboardModel) SystemInfoHistory(timestamp time.Time) (map[string][]str
 		content["cpu"] = append(content["cpu"], consumption.CPU)
 		content["memory"] = append(content["memory"], consumption.Memory)
 		content["disk"] = append(content["disk"], consumption.Disk)
-		content["label"] = append(content["label"], consumption.CreatedAt.String())
+		content["label"] = append(content["label"], strconv.Itoa(int(consumption.CreatedAt.Unix())))
 	}
 	return content, nil
 }
