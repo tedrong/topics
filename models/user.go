@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strings"
 
+	uuid "github.com/satori/go.uuid"
 	"github.com/topics/database"
 	"github.com/topics/forms"
 	"github.com/topics/logging"
@@ -68,7 +69,9 @@ func (m UserModel) Register(form forms.RegisterForm) (user database.User, err er
 	}
 
 	//Create the user and return back the user ID
-	user.Name = form.Name
+	user.UUID = uuid.NewV4().String()
+	user.FirstName = form.FirstName
+	user.LastName = form.LastName
 	user.Email = form.Email
 	user.Password = string(hashedPassword)
 
@@ -77,4 +80,18 @@ func (m UserModel) Register(form forms.RegisterForm) (user database.User, err er
 		return user, errors.New("something went wrong, please try again later")
 	}
 	return user, err
+}
+
+func (m UserModel) Renew(uuid string, form forms.RenewForm) (user database.User, err error) {
+	db := database.GetPG(database.DBContent)
+
+	//Check if the user exists in database
+	result := db.Where("uuid = ?", uuid).Find(&user)
+	if result.Error != nil {
+		return user, result.Error
+	}
+	user.FirstName = form.FirstName
+	user.LastName = form.LastName
+	db.Save(&user)
+	return user, nil
 }

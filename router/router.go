@@ -28,10 +28,10 @@ func Init() {
 	{
 		/*** START USER ***/
 		user := new(controllers.UserController)
-
 		v1.POST("/user/login", user.Login)
 		v1.POST("/user/register", user.Register)
 		v1.GET("/user/logout", user.Logout)
+		v1.PUT("/user/renew/:uuid", user.Renew)
 
 		/*** START AUTH ***/
 		auth := new(controllers.AuthController)

@@ -30,7 +30,6 @@ func (ctrl UserController) Login(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": message})
 		return
 	}
-
 	user, token, err := userModel.Login(loginForm)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": "Invalid login details"})
@@ -64,6 +63,20 @@ func (ctrl UserController) Register(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Successfully registered", "user": user})
+}
+
+// Renew ...
+func (ctrl UserController) Renew(c *gin.Context) {
+	var renewForm forms.RenewForm
+
+	c.ShouldBindJSON(&renewForm)
+	user, err := userModel.Renew(c.Param("uuid"), renewForm)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Successfully renew", "user": user})
 }
 
 //Logout ...

@@ -67,10 +67,11 @@ type Trend struct {
 // DB: content
 type User struct {
 	gorm.Model
-	UUID     string
-	Name     string `db:"name" json:"name"`
-	Email    string `db:"email" json:"email"`
-	Password string `db:"password" json:"-"`
+	UUID      string
+	FirstName string `db:"first_name" json:"first_name"`
+	LastName  string `db:"last_name" json:"last_name"`
+	Email     string `db:"email" json:"email"`
+	Password  string `db:"password" json:"-"`
 }
 
 // DB: internal
