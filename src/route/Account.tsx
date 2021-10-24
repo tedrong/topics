@@ -91,12 +91,10 @@ function AccountProfileDetails() {
   const [values, setValues] = useState<User>(user);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log("submit");
     dispatch(fetchRenewRequest(values));
   };
 

@@ -18,7 +18,8 @@ export default function mockup() {
       UpdatedAt: "2021-09-01T19:47:54.098209+08:00",
       DeletedAt: null,
       UUID: "6835df53-7e4b-476e-bd22-e068a32f1956",
-      name: "testing",
+      first_name: "demo_first",
+      last_name: "demo_last",
       email: "test@test.com",
     },
   });
@@ -32,9 +33,104 @@ export default function mockup() {
     cpu: ["42.23", "53.28"],
     memory: ["65.38", "76.03"],
     disk: ["15.52", "15.54"],
-    label: [
-      "2021-10-17 09:20:49.329041 +0800 CST",
-      "2021-10-18 09:31:56.641926 +0800 CST",
-    ],
+    label: [1635044801, 1635044801],
+  });
+  mock.onGet(API.dashboard.clientType).reply(200, {
+    desktop: 70,
+    mobile: 30,
+  });
+  mock.onGet(new RegExp(`${API.dashboard.log}/*`)).reply(200, [
+    {
+      level: "debug",
+      time: 1635044993,
+      message: "Table migrate successfully in DB:internal",
+      type: "",
+      server: "",
+      cronjob: "",
+    },
+    {
+      level: "debug",
+      time: 1635044993,
+      message: "Table migrate successfully in DB:content",
+      type: "",
+      server: "",
+      cronjob: "",
+    },
+    {
+      level: "debug",
+      time: 1635044993,
+      message: "Table migrate successfully in DB:googleTrends",
+      type: "",
+      server: "",
+      cronjob: "",
+    },
+    {
+      level: "debug",
+      time: 1635044993,
+      message: "Table migrate successfully in DB:stock",
+      type: "",
+      server: "",
+      cronjob: "",
+    },
+    {
+      level: "info",
+      time: 1635044993,
+      message: "logging configured",
+      type: "",
+      server: "",
+      cronjob: "",
+    },
+    {
+      level: "debug",
+      time: 1635044945,
+      message: "Table migrate successfully in DB:internal",
+      type: "",
+      server: "",
+      cronjob: "",
+    },
+    {
+      level: "debug",
+      time: 1635044945,
+      message: "Table migrate successfully in DB:content",
+      type: "",
+      server: "",
+      cronjob: "",
+    },
+    {
+      level: "debug",
+      time: 1635044945,
+      message: "Table migrate successfully in DB:googleTrends",
+      type: "",
+      server: "",
+      cronjob: "",
+    },
+    {
+      level: "debug",
+      time: 1635044945,
+      message: "Table migrate successfully in DB:stock",
+      type: "",
+      server: "",
+      cronjob: "",
+    },
+    {
+      level: "info",
+      time: 1635044944,
+      message: "logging configured",
+      type: "",
+      server: "",
+      cronjob: "",
+    },
+  ]);
+  mock.onPut(new RegExp(`${API.user.renew}/*`)).reply(200, {
+    user: {
+      ID: 2,
+      CreatedAt: "2021-10-24T09:28:02.097789877+08:00",
+      UpdatedAt: "2021-10-24T09:28:02.097789877+08:00",
+      DeletedAt: null,
+      UUID: "",
+      first_name: "renew_first_demo",
+      last_name: "renew_last_demo",
+      email: "",
+    },
   });
 }
