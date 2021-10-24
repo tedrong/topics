@@ -3,10 +3,10 @@ import { Helmet } from "react-helmet";
 import { Redirect, Link as RouterLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  // getPendingSelector,
-  getLoginSelector,
+  getTokenSelector,
   getLoginErrorSelector,
 } from "./store/auth/selectors";
+import { Token } from "./store/auth/types";
 import { fetchLoginRequest } from "./store/auth/actions";
 
 import * as Yup from "yup";
@@ -50,11 +50,10 @@ const StyledForm = styled.form`
 
 export default function LoginBox() {
   const dispatch = useDispatch();
-  // const pending = useSelector(getPendingSelector);
-  const login = useSelector(getLoginSelector);
-  const error = useSelector(getLoginErrorSelector);
+  const token: Token = useSelector(getTokenSelector);
+  const error: string | null = useSelector(getLoginErrorSelector);
 
-  if (error === null && login.token.access_token !== "") {
+  if (error === null && token.access_token !== "") {
     return <Redirect to="/home/welcome" />;
   }
 

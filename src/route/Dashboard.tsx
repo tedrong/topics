@@ -38,13 +38,13 @@ export default function Dashboard() {
   const dispatch = useDispatch();
 
   var info: Info = useSelector(getInfoSelector);
-  var infoPending = useSelector(getInfoPendingSelector);
+  var infoPending: boolean = useSelector(getInfoPendingSelector);
   var infoHistory: InfoHistory = useSelector(getInfoHistorySelector);
-  var infoHistoryPending = useSelector(getInfoHistoryPendingSelector);
+  var infoHistoryPending: boolean = useSelector(getInfoHistoryPendingSelector);
   var clientType: ClientType = useSelector(getClientTypeSelector);
-  var clientTypePending = useSelector(getClientTypePendingSelector);
+  var clientTypePending: boolean = useSelector(getClientTypePendingSelector);
   var log: Log[] = useSelector(getLogSelector);
-  var logPending = useSelector(getLogPendingSelector);
+  var logPending: boolean = useSelector(getLogPendingSelector);
 
   React.useEffect(() => {
     dispatch(fetchInfoRequest());

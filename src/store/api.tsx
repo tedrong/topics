@@ -16,6 +16,7 @@ const Version = "v1";
 export const API = {
   user: {
     login: Version + "/user/login",
+    renew: Version + "/user/renew",
   },
   dashboard: {
     info: Version + "/dashboard/system/info",

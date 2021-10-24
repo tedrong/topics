@@ -43,107 +43,65 @@ const reducer = (state = initialState, action: DashboardActions) => {
     case FETCH_INFO_REQUEST:
       return {
         ...state,
-        info: {
-          pending: true,
-        },
+        info: { pending: true },
       };
     case FETCH_INFO_SUCCESS:
       return {
         ...state,
-        info: {
-          pending: false,
-          data: action.payload.data,
-          error: null,
-        },
+        info: { pending: false, data: action.payload.data, error: null },
       };
     case FETCH_INFO_FAILURE:
       return {
         ...state,
-        info: {
-          pending: false,
-          data: {},
-          error: action.payload.error,
-        },
+        info: { pending: false, error: action.payload.error },
       };
     case FETCH_INFO_HISTORY_REQUEST:
       return {
         ...state,
-        infoHistory: {
-          pending: true,
-        },
+        infoHistory: { pending: true },
       };
     case FETCH_INFO_HISTORY_SUCCESS:
       return {
         ...state,
-        infoHistory: {
-          pending: false,
-          data: action.payload.data,
-          error: null,
-        },
+        infoHistory: { pending: false, data: action.payload.data, error: null },
       };
     case FETCH_INFO_HISTORY_FAILURE:
       return {
         ...state,
-        infoHistory: {
-          pending: false,
-          data: {},
-          error: action.payload.error,
-        },
+        infoHistory: { pending: false, error: action.payload.error },
       };
     case FETCH_CLIENT_TYPE_REQUEST:
       return {
         ...state,
-        clientType: {
-          pending: true,
-        },
+        clientType: { pending: true },
       };
     case FETCH_CLIENT_TYPE_SUCCESS:
       return {
         ...state,
-        clientType: {
-          pending: false,
-          data: action.payload.data,
-          error: null,
-        },
+        clientType: { pending: false, data: action.payload.data, error: null },
       };
     case FETCH_CLIENT_TYPE_FAILURE:
       return {
         ...state,
-        clientType: {
-          pending: false,
-          data: {},
-          error: action.payload.error,
-        },
+        clientType: { pending: false, error: action.payload.error },
       };
     case FETCH_LOG_REQUEST:
       return {
         ...state,
-        log: {
-          pending: true,
-        },
+        log: { pending: true },
       };
     case FETCH_LOG_SUCCESS:
       return {
         ...state,
-        log: {
-          pending: false,
-          data: action.payload.data,
-          error: null,
-        },
+        log: { pending: false, data: action.payload.data, error: null },
       };
     case FETCH_LOG_FAILURE:
       return {
         ...state,
-        log: {
-          pending: false,
-          data: {},
-          error: action.payload.error,
-        },
+        log: { pending: false, error: action.payload.error },
       };
     default:
-      return {
-        ...state,
-      };
+      return { ...state };
   }
 };
 export default reducer;

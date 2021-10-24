@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { User } from "../store/auth/types";
+import { fetchRenewRequest } from "../store/auth/actions";
+import { getUserSelector } from "../store/auth/selectors";
 import { Helmet } from "react-helmet";
-import moment from "moment";
 import {
   Avatar,
   Box,
@@ -45,13 +48,10 @@ export default function Account() {
 }
 
 function AccountProfile() {
-  const user = {
+  const user: User = useSelector(getUserSelector);
+  const value = {
     avatar: "/static/images/avatars/avatar_6.png",
-    city: "Los Angeles",
-    country: "USA",
-    jobTitle: "Senior Developer",
-    name: "Katarina Smith",
-    timezone: "GTM-7",
+    name: user.first_name,
   };
   return (
     <Card>
@@ -64,14 +64,14 @@ function AccountProfile() {
           }}
         >
           <Avatar
-            src={user.avatar}
+            src={value.avatar}
             sx={{
               height: 100,
               width: 100,
             }}
           />
           <Typography color="textPrimary" gutterBottom variant="h3">
-            {user.name}
+            {value.name}
           </Typography>
         </Box>
       </CardContent>
@@ -86,20 +86,18 @@ function AccountProfile() {
 }
 
 function AccountProfileDetails() {
-  const [values, setValues] = useState({
-    firstName: "Katarina",
-    lastName: "Smith",
-    email: "demo@devias.io",
-    phone: "",
-    state: "Alabama",
-    country: "USA",
-  });
+  const dispatch = useDispatch();
+  const user: User = useSelector(getUserSelector);
+  const [values, setValues] = useState<User>(user);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValues({
-      ...values,
-      [e.target.name]: e.target.value,
-    });
+    console.log(e.target.value);
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log("submit");
+    dispatch(fetchRenewRequest(values));
   };
 
   return (
@@ -114,10 +112,10 @@ function AccountProfileDetails() {
                 fullWidth
                 helperText="Please specify the first name"
                 label="First name"
-                name="firstName"
+                name="first_name"
                 onChange={handleChange}
                 required
-                value={values.firstName}
+                value={values.first_name}
                 variant="outlined"
               />
             </Grid>
@@ -125,21 +123,10 @@ function AccountProfileDetails() {
               <TextField
                 fullWidth
                 label="Last name"
-                name="lastName"
+                name="last_name"
                 onChange={handleChange}
                 required
-                value={values.lastName}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Email Address"
-                name="email"
-                onChange={handleChange}
-                required
-                value={values.email}
+                value={values.last_name}
                 variant="outlined"
               />
             </Grid>
@@ -153,7 +140,11 @@ function AccountProfileDetails() {
             p: 2,
           }}
         >
-          <Button color="primary" variant="contained">
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={(e) => handleSubmit(e)}
+          >
             Save details
           </Button>
         </Box>

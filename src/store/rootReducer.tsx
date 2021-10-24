@@ -1,11 +1,9 @@
 import { AnyAction, combineReducers, Reducer } from "redux";
 
-import todoReducer from "./todo/reducer";
 import authReducer from "./auth/reducer";
 import dashboardReducer from "./dashboard/reducer";
 
 const combinedReducer = combineReducers({
-  todo: todoReducer,
   auth: authReducer,
   dashboard: dashboardReducer,
 });

@@ -23,7 +23,9 @@ interface Prop {
 export default function SimpleBarChart(prop: Prop) {
   const theme = useTheme();
   let label: string[] = [];
-  prop.label.map((date) => label.push(moment(date * 1000).format("MM/DD")));
+  if (prop.label) {
+    prop.label.map((date) => label.push(moment(date * 1000).format("MM/DD")));
+  }
 
   const data = {
     datasets: [

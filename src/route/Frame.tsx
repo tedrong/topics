@@ -1,4 +1,7 @@
 import React, { Suspense, useState } from "react";
+import { useSelector } from "react-redux";
+import { getTokenSelector, getUserSelector } from "../store/auth/selectors";
+import { Token, User } from "../store/auth/types";
 import {
   Link,
   matchPath,
@@ -10,7 +13,6 @@ import {
   useLocation,
 } from "react-router-dom";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
 import {
   AppBar,
   Avatar,
@@ -32,8 +34,6 @@ import { FaBell, FaSignOutAlt, FaBars, FaUser } from "react-icons/fa";
 import { BsPieChartFill, BsXSquareFill } from "react-icons/bs";
 import logo from "../material/leave.png";
 import theme from "../theme";
-
-import { getLoginSelector } from "../store/auth/selectors";
 
 import Pending from "../components/Pending";
 import NotFound from "../components/NotFound";
@@ -85,10 +85,10 @@ interface menuItem {
 }
 
 export default function Frame() {
-  const login = useSelector(getLoginSelector);
+  const token: Token = useSelector(getTokenSelector);
   const [MobileMode, setMobileMode] = useState(false);
 
-  if (login.token.access_token !== "") {
+  if (token.access_token !== "") {
     return (
       <LayoutRoot>
         <IconContext.Provider value={{ style: { marginRight: "10px" } }}>
@@ -145,11 +145,8 @@ function NavBar(status: menuStatus) {
 }
 
 function SideMenu(status: menuStatus) {
-  const user = {
-    avatar: "",
-    jobTitle: "R&D",
-    name: "Ted Rong",
-  };
+  const user: User = useSelector(getUserSelector);
+
   const items = [
     {
       href: "/home/dashboard",
@@ -185,7 +182,7 @@ function SideMenu(status: menuStatus) {
       >
         <Avatar
           component={Link}
-          src={user.avatar}
+          src={""}
           sx={{
             cursor: "pointer",
             width: 64,
@@ -194,10 +191,10 @@ function SideMenu(status: menuStatus) {
           to="/app/account"
         />
         <Typography color="textPrimary" variant="h5">
-          {user.name}
+          {user.first_name}
         </Typography>
         <Typography color="textSecondary" variant="body2">
-          {user.jobTitle}
+          {"R&D"}
         </Typography>
       </Box>
       <Divider />

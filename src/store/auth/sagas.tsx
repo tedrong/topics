@@ -2,16 +2,27 @@ import axios, { AxiosResponse } from "axios";
 import { all, call, put, takeLatest } from "redux-saga/effects";
 
 import { API, attachAuthToken } from "../api";
-import { fetchLoginFailure, fetchLoginSuccess } from "./actions";
-import { FETCH_LOGIN_REQUEST } from "./actionTypes";
 import {
-  FetchLoginRequest,
-  FetchLoginRequestPayload,
+  fetchLoginSuccess,
+  fetchLoginFailure,
+  fetchRenewSuccess,
+  fetchRenewFailure,
+} from "./actions";
+import { FETCH_LOGIN_REQUEST, FETCH_RENEW_REQUEST } from "./actionTypes";
+import {
+  User,
   LoginPayload,
+  FetchLoginRequestPayload,
+  FetchLoginRequest,
+  RenewPayload,
+  FetchRenewRequest,
 } from "./types";
 
 const postLogin = (payload: FetchLoginRequestPayload) =>
   axios.post<LoginPayload>(API.user.login, payload);
+const putRenew = (payload: User) =>
+  axios.put<RenewPayload>(API.user.renew + "/" + payload.UUID, payload);
+
 /*
   Worker Saga: Fired on FETCH_LOGIN_REQUEST action
 */
@@ -39,9 +50,37 @@ function* fetchLoginSaga(req: FetchLoginRequest) {
 }
 
 /*
+  Worker Saga: Fired on FETCH_RENEW_REQUEST action
+*/
+function* fetchRenewSaga(req: FetchRenewRequest) {
+  try {
+    const response: AxiosResponse<RenewPayload> = yield call(
+      putRenew,
+      req.payload
+    );
+    yield put(
+      fetchRenewSuccess({
+        data: response.data,
+      })
+    );
+  } catch (e) {
+    if (axios.isAxiosError(e)) {
+      yield put(
+        fetchRenewFailure({
+          error: e.message,
+        })
+      );
+    }
+  }
+}
+
+/*
   Starts worker saga on latest dispatched `FETCH_LOGIN_REQUEST` action.
   Allows concurrent increments.
 */
 export default function* loginSaga() {
-  yield all([takeLatest(FETCH_LOGIN_REQUEST, fetchLoginSaga)]);
+  yield all([
+    takeLatest(FETCH_LOGIN_REQUEST, fetchLoginSaga),
+    takeLatest(FETCH_RENEW_REQUEST, fetchRenewSaga),
+  ]);
 }
