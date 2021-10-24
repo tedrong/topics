@@ -21,7 +21,6 @@ import {
   Button,
   Divider,
   Drawer,
-  Hidden,
   IconButton,
   List,
   ListItem,
@@ -120,7 +119,17 @@ function NavBar(status: menuStatus) {
           <StyledImg src={logo} />
         </Link>
         <Box sx={{ flexGrow: 1 }} />
-        <Hidden xlDown>
+        <Box
+          sx={{
+            display: {
+              xs: "none",
+              sm: "none",
+              md: "none",
+              lg: "block",
+              xl: "block",
+            },
+          }}
+        >
           <IconButton color="inherit">
             <Badge badgeContent={10} color="info" variant="dot"></Badge>
             <FaBell />
@@ -128,8 +137,18 @@ function NavBar(status: menuStatus) {
           <IconButton color="inherit" onClick={handleLogout}>
             <FaSignOutAlt />
           </IconButton>
-        </Hidden>
-        <Hidden xlUp>
+        </Box>
+        <Box
+          sx={{
+            display: {
+              xs: "block",
+              sm: "block",
+              md: "block",
+              lg: "none",
+              xl: "none",
+            },
+          }}
+        >
           <IconButton
             color="inherit"
             onClick={() => {
@@ -138,7 +157,7 @@ function NavBar(status: menuStatus) {
           >
             <FaBars />
           </IconButton>
-        </Hidden>
+        </Box>
       </Toolbar>
     </AppBar>
   );
@@ -214,39 +233,49 @@ function SideMenu(status: menuStatus) {
   );
   return (
     <>
-      <Hidden lgUp>
-        <Drawer
-          anchor="left"
-          onClose={() => {
-            status.setMobile(false);
-          }}
-          open={status.mobile}
-          variant="temporary"
-          PaperProps={{
-            sx: {
-              width: 256,
+      <Drawer
+        anchor="left"
+        onClose={() => {
+          status.setMobile(false);
+        }}
+        open={status.mobile}
+        variant="temporary"
+        PaperProps={{
+          sx: {
+            width: 256,
+            display: {
+              xs: "block",
+              sm: "block",
+              md: "block",
+              lg: "none",
+              xl: "none",
             },
-          }}
-        >
-          {content}
-        </Drawer>
-      </Hidden>
-      <Hidden lgDown>
-        <Drawer
-          anchor="left"
-          open
-          variant="persistent"
-          PaperProps={{
-            sx: {
-              width: 256,
-              top: 64,
-              height: "calc(100% - 64px)",
+          },
+        }}
+      >
+        {content}
+      </Drawer>
+      <Drawer
+        anchor="left"
+        open
+        variant="persistent"
+        PaperProps={{
+          sx: {
+            width: 256,
+            top: 64,
+            height: "calc(100% - 64px)",
+            display: {
+              xs: "none",
+              sm: "none",
+              md: "none",
+              lg: "block",
+              xl: "block",
             },
-          }}
-        >
-          {content}
-        </Drawer>
-      </Hidden>
+          },
+        }}
+      >
+        {content}
+      </Drawer>
     </>
   );
 }
