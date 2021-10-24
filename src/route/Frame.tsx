@@ -1,5 +1,6 @@
 import React, { Suspense, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchLogoutRequest } from "../store/auth/actions";
 import { getTokenSelector, getUserSelector } from "../store/auth/selectors";
 import { Token, User } from "../store/auth/types";
 import {
@@ -109,8 +110,9 @@ export default function Frame() {
 }
 
 function NavBar(status: menuStatus) {
+  const dispatch = useDispatch();
   const handleLogout = () => {
-    console.log("logout");
+    dispatch(fetchLogoutRequest());
   };
   return (
     <AppBar position="fixed">

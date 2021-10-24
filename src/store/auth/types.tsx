@@ -5,6 +5,9 @@ import {
   FETCH_RENEW_REQUEST,
   FETCH_RENEW_SUCCESS,
   FETCH_RENEW_FAILURE,
+  FETCH_LOGOUT_REQUEST,
+  FETCH_LOGOUT_SUCCESS,
+  FETCH_LOGOUT_FAILURE,
 } from "./actionTypes";
 
 export interface Token {
@@ -33,9 +36,15 @@ export interface RenewPayload {
   error: string | null;
 }
 
+export interface LogoutPayload {
+  pending: boolean;
+  error: string | null;
+}
+
 export interface AuthState {
   login: LoginPayload;
   renew: RenewPayload;
+  logout: LogoutPayload;
 }
 
 export interface FetchLoginRequestPayload {
@@ -59,6 +68,10 @@ export interface FetchRenewFailurePayload {
   error: string;
 }
 
+export interface FetchLogoutFailurePayload {
+  error: string;
+}
+
 export interface FetchLoginRequest {
   type: typeof FETCH_LOGIN_REQUEST;
   payload: FetchLoginRequestPayload;
@@ -67,6 +80,10 @@ export interface FetchLoginRequest {
 export interface FetchRenewRequest {
   type: typeof FETCH_RENEW_REQUEST;
   payload: User;
+}
+
+export interface FetchLogoutRequest {
+  type: typeof FETCH_LOGOUT_REQUEST;
 }
 
 export type FetchLoginSuccess = {
@@ -79,6 +96,10 @@ export type FetchRenewSuccess = {
   payload: FetchRenewSuccessPayload;
 };
 
+export type FetchLogoutSuccess = {
+  type: typeof FETCH_LOGOUT_SUCCESS;
+};
+
 export type FetchLoginFailure = {
   type: typeof FETCH_LOGIN_FAILURE;
   payload: FetchLoginFailurePayload;
@@ -89,10 +110,18 @@ export type FetchRenewFailure = {
   payload: FetchRenewFailurePayload;
 };
 
+export type FetchLogoutFailure = {
+  type: typeof FETCH_LOGOUT_FAILURE;
+  payload: FetchLogoutFailurePayload;
+};
+
 export type AuthActions =
   | FetchLoginRequest
   | FetchLoginSuccess
   | FetchLoginFailure
   | FetchRenewRequest
   | FetchRenewSuccess
-  | FetchRenewFailure;
+  | FetchRenewFailure
+  | FetchLogoutRequest
+  | FetchLogoutSuccess
+  | FetchLogoutFailure;

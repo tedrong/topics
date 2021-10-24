@@ -1,24 +1,31 @@
 import {
   FETCH_LOGIN_REQUEST,
-  FETCH_LOGIN_FAILURE,
   FETCH_LOGIN_SUCCESS,
+  FETCH_LOGIN_FAILURE,
   FETCH_RENEW_REQUEST,
-  FETCH_RENEW_FAILURE,
   FETCH_RENEW_SUCCESS,
+  FETCH_RENEW_FAILURE,
+  FETCH_LOGOUT_REQUEST,
+  FETCH_LOGOUT_SUCCESS,
+  FETCH_LOGOUT_FAILURE,
 } from "./actionTypes";
 import {
   User,
-  FetchLoginRequest,
-  FetchLoginSuccess,
-  FetchLoginFailure,
   FetchLoginRequestPayload,
   FetchLoginSuccessPayload,
   FetchLoginFailurePayload,
+  FetchLoginRequest,
+  FetchLoginSuccess,
+  FetchLoginFailure,
+  FetchRenewSuccessPayload,
+  FetchRenewFailurePayload,
   FetchRenewRequest,
   FetchRenewSuccess,
   FetchRenewFailure,
-  FetchRenewSuccessPayload,
-  FetchRenewFailurePayload,
+  FetchLogoutFailurePayload,
+  FetchLogoutRequest,
+  FetchLogoutSuccess,
+  FetchLogoutFailure,
 } from "./types";
 
 export const fetchLoginRequest = (
@@ -31,6 +38,10 @@ export const fetchLoginRequest = (
 export const fetchRenewRequest = (payload: User): FetchRenewRequest => ({
   type: FETCH_RENEW_REQUEST,
   payload,
+});
+
+export const fetchLogoutRequest = (): FetchLogoutRequest => ({
+  type: FETCH_LOGOUT_REQUEST,
 });
 
 export const fetchLoginSuccess = (
@@ -47,6 +58,10 @@ export const fetchRenewSuccess = (
   payload,
 });
 
+export const fetchLogoutSuccess = (): FetchLogoutSuccess => ({
+  type: FETCH_LOGOUT_SUCCESS,
+});
+
 export const fetchLoginFailure = (
   payload: FetchLoginFailurePayload
 ): FetchLoginFailure => ({
@@ -58,5 +73,12 @@ export const fetchRenewFailure = (
   payload: FetchRenewFailurePayload
 ): FetchRenewFailure => ({
   type: FETCH_RENEW_FAILURE,
+  payload,
+});
+
+export const fetchLogoutFailure = (
+  payload: FetchLogoutFailurePayload
+): FetchLogoutFailure => ({
+  type: FETCH_LOGOUT_FAILURE,
   payload,
 });

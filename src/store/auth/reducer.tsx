@@ -5,6 +5,9 @@ import {
   FETCH_RENEW_REQUEST,
   FETCH_RENEW_SUCCESS,
   FETCH_RENEW_FAILURE,
+  FETCH_LOGOUT_REQUEST,
+  FETCH_LOGOUT_SUCCESS,
+  FETCH_LOGOUT_FAILURE,
 } from "./actionTypes";
 
 import { AuthActions, AuthState } from "./types";
@@ -33,6 +36,10 @@ const initialState: AuthState = {
       first_name: "",
       last_name: "",
     },
+    error: null,
+  },
+  logout: {
+    pending: false,
     error: null,
   },
 };
@@ -72,6 +79,20 @@ const reducer = (state = initialState, action: AuthActions) => {
       return {
         ...state,
         renew: { pending: false, error: action.payload.error },
+      };
+    case FETCH_LOGOUT_REQUEST:
+      return {
+        ...state,
+        logout: {
+          pending: true,
+        },
+      };
+    case FETCH_LOGOUT_SUCCESS:
+      return { ...state, logout: { pending: false, error: null } };
+    case FETCH_LOGOUT_FAILURE:
+      return {
+        ...state,
+        logout: { pending: false, error: action.payload.error },
       };
     default:
       return { ...state };

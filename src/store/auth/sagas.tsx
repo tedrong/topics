@@ -7,14 +7,20 @@ import {
   fetchLoginFailure,
   fetchRenewSuccess,
   fetchRenewFailure,
+  fetchLogoutSuccess,
+  fetchLogoutFailure,
 } from "./actions";
-import { FETCH_LOGIN_REQUEST, FETCH_RENEW_REQUEST } from "./actionTypes";
+import {
+  FETCH_LOGIN_REQUEST,
+  FETCH_RENEW_REQUEST,
+  FETCH_LOGOUT_REQUEST,
+} from "./actionTypes";
 import {
   User,
   LoginPayload,
+  RenewPayload,
   FetchLoginRequestPayload,
   FetchLoginRequest,
-  RenewPayload,
   FetchRenewRequest,
 } from "./types";
 
@@ -22,6 +28,7 @@ const postLogin = (payload: FetchLoginRequestPayload) =>
   axios.post<LoginPayload>(API.user.login, payload);
 const putRenew = (payload: User) =>
   axios.put<RenewPayload>(API.user.renew + "/" + payload.UUID, payload);
+const getLogout = () => axios.get(API.user.logout);
 
 /*
   Worker Saga: Fired on FETCH_LOGIN_REQUEST action
@@ -75,12 +82,27 @@ function* fetchRenewSaga(req: FetchRenewRequest) {
 }
 
 /*
+  Worker Saga: Fired on FETCH_LOGOUT_REQUEST action
+*/
+function* fetchLogoutSaga() {
+  try {
+    yield call(getLogout);
+    yield put(fetchLogoutSuccess());
+  } catch (e) {
+    if (axios.isAxiosError(e)) {
+      yield put(fetchLogoutFailure({ error: e.message }));
+    }
+  }
+}
+
+/*
   Starts worker saga on latest dispatched `FETCH_LOGIN_REQUEST` action.
   Allows concurrent increments.
 */
-export default function* loginSaga() {
+export default function* authSaga() {
   yield all([
     takeLatest(FETCH_LOGIN_REQUEST, fetchLoginSaga),
     takeLatest(FETCH_RENEW_REQUEST, fetchRenewSaga),
+    takeLatest(FETCH_LOGOUT_REQUEST, fetchLogoutSaga),
   ]);
 }
