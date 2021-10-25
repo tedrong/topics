@@ -44,7 +44,7 @@ function* fetchLoginSaga(req: FetchLoginRequest) {
         data: response.data,
       })
     );
-    attachAuthToken(response.data.token.access_token);
+    attachAuthToken(response.data.token);
   } catch (e) {
     if (axios.isAxiosError(e)) {
       yield put(

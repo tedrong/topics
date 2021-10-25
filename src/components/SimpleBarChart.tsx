@@ -63,55 +63,6 @@ export default function SimpleBarChart(prop: Prop) {
     labels: label,
   };
 
-  const options: ChartOptions = {
-    animation: false,
-    // cornerRadius: 20,
-    layout: { padding: 0 },
-    // legend: { display: false },
-    maintainAspectRatio: false,
-    responsive: true,
-    scales: {
-      x: {
-        ticks: {
-          color: theme.palette.text.secondary,
-        },
-        grid: {
-          display: false,
-          drawBorder: false,
-        },
-      },
-      y: {
-        beginAtZero: true,
-        min: 0,
-        ticks: {
-          color: theme.palette.text.secondary,
-        },
-        grid: {
-          borderDash: [2],
-          //   borderDashOffset: [2],
-          color: theme.palette.divider,
-          drawBorder: false,
-          //   zeroLineBorderDash: [2],
-          //   zeroLineBorderDashOffset: [2],
-          //   zeroLineColor: theme.palette.divider,
-        },
-      },
-    },
-    plugins: {
-      tooltip: {
-        backgroundColor: theme.palette.background.paper,
-        // bodyFontColor: theme.palette.text.secondary,
-        borderColor: theme.palette.divider,
-        borderWidth: 1,
-        enabled: true,
-        // footerFontColor: theme.palette.text.secondary,
-        intersect: false,
-        mode: "index",
-        // titleFontColor: theme.palette.text.primary,
-      },
-    },
-  };
-
   return (
     <Card sx={{ height: "100%" }}>
       <CardHeader
@@ -130,7 +81,7 @@ export default function SimpleBarChart(prop: Prop) {
             position: "relative",
           }}
         >
-          <Bar data={data} options={options} />
+          <Bar data={data} />
         </Box>
       </CardContent>
       <Divider />

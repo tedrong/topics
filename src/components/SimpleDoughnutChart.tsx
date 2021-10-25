@@ -36,30 +36,6 @@ export default function SimpleDoughnutChart(prop: Prop) {
     labels: ["Desktop", "Mobile"],
   };
 
-  const options: ChartOptions = {
-    animation: false,
-    // cutoutPercentage: 80,
-    layout: { padding: 0 },
-    maintainAspectRatio: false,
-    responsive: true,
-    plugins: {
-      legend: {
-        display: false,
-      },
-      tooltip: {
-        backgroundColor: theme.palette.background.paper,
-        // bodyFontColor: theme.palette.text.secondary,
-        borderColor: theme.palette.divider,
-        borderWidth: 1,
-        enabled: true,
-        // footerFontColor: theme.palette.text.secondary,
-        intersect: false,
-        mode: "index",
-        // titleFontColor: theme.palette.text.primary,
-      },
-    },
-  };
-
   const devices = [
     {
       title: "Desktop",
@@ -86,7 +62,7 @@ export default function SimpleDoughnutChart(prop: Prop) {
             position: "relative",
           }}
         >
-          <Doughnut data={data} options={options} />
+          <Doughnut data={data} />
         </Box>
         <Box
           sx={{

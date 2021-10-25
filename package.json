@@ -24,6 +24,7 @@
     "@types/styled-components": "^5.1.14",
     "axios": "^0.21.1",
     "chart.js": "^3.5.1",
+    "cookie-storage": "^6.1.0",
     "env-cmd": "^10.1.0",
     "formik": "^2.2.9",
     "history": "4.10.1",
