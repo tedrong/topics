@@ -109,7 +109,11 @@ func (f UserForm) Register(err error) string {
 		}
 
 		for _, err := range err.(validator.ValidationErrors) {
-			if err.Field() == "Name" {
+			if err.Field() == "FirstName" {
+				return f.Name(err.Tag())
+			}
+
+			if err.Field() == "LastName" {
 				return f.Name(err.Tag())
 			}
 

@@ -72,7 +72,7 @@ func (m UserModel) Register(form forms.RegisterForm) (user database.User, err er
 	user.UUID = uuid.NewV4().String()
 	user.FirstName = form.FirstName
 	user.LastName = form.LastName
-	user.Email = form.Email
+	user.Email = strings.ToLower(form.Email)
 	user.Password = string(hashedPassword)
 
 	result = db.Create(&user)
@@ -84,14 +84,7 @@ func (m UserModel) Register(form forms.RegisterForm) (user database.User, err er
 
 func (m UserModel) Renew(uuid string, form forms.RenewForm) (user database.User, err error) {
 	db := database.GetPG(database.DBContent)
-
-	//Check if the user exists in database
-	result := db.Where("uuid = ?", uuid).Find(&user)
-	if result.Error != nil {
-		return user, result.Error
-	}
-	user.FirstName = form.FirstName
-	user.LastName = form.LastName
-	db.Save(&user)
+	db.Model(&user).Where("uuid = ?", uuid).Update("first_name", form.FirstName).Update("last_name", form.LastName)
+	db.Where("uuid = ?", uuid).Find(&user)
 	return user, nil
 }
