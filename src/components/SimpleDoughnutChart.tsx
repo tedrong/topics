@@ -1,5 +1,4 @@
 import { Doughnut } from "react-chartjs-2";
-import { ChartOptions } from "chart.js";
 import {
   Box,
   Card,
@@ -8,12 +7,8 @@ import {
   Divider,
   Typography,
   colors,
-  useTheme,
 } from "@mui/material";
 import { BsLaptop, BsPhone } from "react-icons/bs";
-// import LaptopMacIcon from '@material-ui/icons/LaptopMac';
-// import PhoneIcon from '@material-ui/icons/Phone';
-// import TabletIcon from '@material-ui/icons/Tablet';
 
 interface Prop {
   desktop: number;
@@ -21,8 +16,6 @@ interface Prop {
 }
 
 export default function SimpleDoughnutChart(prop: Prop) {
-  const theme = useTheme();
-
   const data = {
     datasets: [
       {

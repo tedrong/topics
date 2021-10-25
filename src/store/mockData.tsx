@@ -133,4 +133,10 @@ export default function mockup() {
       email: "",
     },
   });
+  mock.onPost(API.auth.refresh).reply(200, {
+    access_token:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImNmYzM3ZDE0LWRkNjgtNGM1Zi04ZjRlLTIyM2U4NzEyZDQ2ZCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTYzNTA1MjQxOSwidXNlcl9pZCI6MX0.bINqV3SkYFysM9XnqlusEaqSCXEM_JSfSPiFlz1-sjw",
+    refresh_token:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzU2NTYzMTksInJlZnJlc2hfdXVpZCI6IjczNWEwZjY4LTNmOTUtNDU2Zi04MDAzLTFhNmUzYzY0YTUwOCIsInVzZXJfaWQiOjF9.SwOhj9qXnSOE_t4s-HlLKJruzfhjBhwM8mNLWbfZPt0",
+  });
 }

@@ -1,6 +1,5 @@
 import moment from "moment";
 import { Bar } from "react-chartjs-2";
-import { ChartOptions } from "chart.js";
 import {
   Box,
   Button,
@@ -8,7 +7,6 @@ import {
   CardContent,
   CardHeader,
   Divider,
-  useTheme,
   colors,
 } from "@mui/material";
 import { BsFillCaretDownFill, BsFillCaretRightFill } from "react-icons/bs";
@@ -21,7 +19,6 @@ interface Prop {
 }
 
 export default function SimpleBarChart(prop: Prop) {
-  const theme = useTheme();
   let label: string[] = [];
   if (prop.label) {
     prop.label.map((date) => label.push(moment(date * 1000).format("MM/DD")));
