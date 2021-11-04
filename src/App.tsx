@@ -22,7 +22,7 @@ export default function App() {
           <Redirect to="/login" />
         </Route>
         <Route path="/login" component={Login} />
-        <Route path="/register" component={Register} />S
+        <Route path="/register" component={Register} />
         <Route path="/home" component={Frame} />
       </Switch>
     </ThemeProvider>
