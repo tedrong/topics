@@ -1,6 +1,6 @@
 ## Frontend Kit - React
 
-This subproject is a web application example for topic server. We already implement basic functions for data concatenation with backend server and all the layout things such as frame design or react router rules, it's ready to be a quick start example.
+This subproject is a web application example for topic server. We already implement basic functions for fetch data from backend server and all the layout things such as frame design or react router rules, it's ready to be a quick start example.
 
 The project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), Beside the **Typescript** template can be triggered from create command options, we also import **Redux** and **Redux-Saga** for state management. Please check [here](https://www.vhudyma-blog.eu/add-redux-saga-with-typescript-to-your-react-application-january-2021/#Step-2.1:-Install-Redux-Logger-Axios) for more detail information about how to implement it.
 
